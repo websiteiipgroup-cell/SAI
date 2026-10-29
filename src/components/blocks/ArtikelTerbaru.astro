@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import ArtikelCard from '../ArtikelCard.astro';
+const { b } = Astro.props;
+const list = (await getCollection('artikel', (a) => !a.data.draft && (!b.kategori || a.data.kategori === b.kategori)))
+  .sort((a, c) => c.data.tanggal.valueOf() - a.data.tanggal.valueOf()).slice(0, b.jumlah || 3);
+const semua = b.kategori === 'Pengetahuan' ? '/pengetahuan/' : '/cerita-sagri/';
+---
+{list.length > 0 && (
+<section class="section"><div class="wrap">
+  <div class="section-head">{b.judul && <h2>{b.judul}</h2>}<a class="link-panah" href={semua}>Lihat semua</a></div>
+  <div class="agrid">{list.map((a) => <ArtikelCard a={a} />)}</div>
+</div></section>
+)}

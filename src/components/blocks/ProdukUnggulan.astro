@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import ProdukCard from '../ProdukCard.astro';
+const { b } = Astro.props;
+const list = (await getCollection('produk')).filter((p) => p.data.unggulan).sort((a, c) => a.data.urutan - c.data.urutan);
+---
+{list.length > 0 && (
+<section class="section"><div class="wrap">
+  <div class="section-head">
+    <div>{b.judul && <h2>{b.judul}</h2>}{b.intro && <p class="lead">{b.intro}</p>}</div>
+    <a class="link-panah" href="/produk/">Lihat semua produk</a>
+  </div>
+  <div class="pgrid pgrid--unggulan">{list.map((p) => <ProdukCard p={p} />)}</div>
+</div></section>
+)}

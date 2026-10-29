@@ -1,0 +1,49 @@
+---
+import site from '../data/site.json';
+import { tel, wa } from '../lib/md';
+const { b = {} } = Astro.props;
+const sosmed = [
+  ['Instagram', site.instagram], ['Facebook', site.facebook], ['TikTok', site.tiktok], ['YouTube', site.youtube],
+].filter(([, u]) => u);
+---
+<section class="kontak" id="kontak"><div class="wrap kontak__grid">
+  <div class="kontak__info">
+    <h2>{b.judul || 'Hubungi kami'}</h2>
+    <dl>
+      <div><dt>WhatsApp</dt><dd><a href={wa()}>{site.whatsapp_tampil}</a></dd></div>
+      <div><dt>Telepon kantor</dt><dd><a href={tel(site.telepon)}>{site.telepon}</a></dd></div>
+      <div><dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+      <div><dt>Kantor</dt><dd>{site.alamat}<br><a href={site.link_maps}>Buka di Google Maps</a></dd></div>
+      {sosmed.length > 0 && <div><dt>Media sosial</dt><dd class="kontak__sosmed">{sosmed.map(([n, u]) => <a href={u}>{n}</a>)}</dd></div>}
+    </dl>
+  </div>
+  <form class="form" id="form-kontak" data-wa={site.whatsapp} data-email={site.email}>
+    <h3>Kirim pesan</h3>
+    <div class="form__row">
+      <div class="field"><label for="f-nama">Nama</label><input id="f-nama" name="nama" required autocomplete="name"></div>
+      <div class="field"><label for="f-kota">Kota atau kabupaten</label><input id="f-kota" name="kota" autocomplete="address-level2"></div>
+    </div>
+    <div class="field"><label for="f-perlu">Saya ingin</label>
+      <select id="f-perlu" name="perlu">
+        <option>Tanya produk dan cara pakai</option>
+        <option>Cari kios terdekat</option>
+        <option>Menjadi kios atau distributor</option>
+        <option>Lainnya</option>
+      </select>
+    </div>
+    <div class="field"><label for="f-pesan">Pesan</label><textarea id="f-pesan" name="pesan" required placeholder="Contoh: padi saya umur 30 hari, banyak sundep. Produk apa yang cocok?"></textarea></div>
+    <button type="submit" class="btn btn--wa">Kirim lewat WhatsApp</button>
+    <p class="form__catatan">Pesan terbuka di WhatsApp, tinggal tekan kirim.</p>
+  </form>
+</div></section>
+
+<script>
+  const form = document.getElementById('form-kontak') as HTMLFormElement | null;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = new FormData(form);
+    const text = `Halo SAGRI,\n\nNama: ${d.get('nama')}\nKota: ${d.get('kota') || '-'}\nKeperluan: ${d.get('perlu')}\n\n${d.get('pesan')}`;
+    if (form.dataset.wa) window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    else if (form.dataset.email) location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent('Pesan dari website')}&body=${encodeURIComponent(text)}`;
+  });
+</script>

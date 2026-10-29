@@ -1,0 +1,12 @@
+---
+import { md } from '../../lib/md';
+import Foto from '../Foto.astro';
+const { b } = Astro.props;
+---
+<section class="section"><div class={`wrap teks-foto${b.posisi_foto === 'kiri' ? ' teks-foto--kiri' : ''}`}>
+  <div class="prose">
+    {b.judul && <h2>{b.judul}</h2>}
+    <Fragment set:html={md(b.isi)} />
+  </div>
+  <div class="teks-foto__img"><Foto src={b.gambar} alt={b.gambar_alt || ''} label="Foto belum diunggah" /></div>
+</div></section>

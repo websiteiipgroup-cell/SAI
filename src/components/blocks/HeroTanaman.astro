@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import site from '../../data/site.json';
+const { b } = Astro.props;
+const produk = await getCollection('produk');
+const jumlah = (nama: string) => produk.filter((p) => p.data.tanaman.includes(nama as any)).length;
+---
+<section class="hero">
+  {b.latar && <img class="hero__bg" src={b.latar} alt="" aria-hidden="true" fetchpriority="high" />}
+  <div class="wrap hero__inner">
+    <div class="hero__teks">
+      <h1>{b.judul}</h1>
+      {b.deskripsi && <p>{b.deskripsi}</p>}
+    </div>
+    <ul class="tanaman" aria-label="Pilih tanaman">
+      {site.komoditas.map((k) => (
+        <li>
+          <a class="tanaman__item" href={`/solusi/${k.slug}/`}>
+            {k.ikon && <img src={k.ikon} alt="" width="88" height="88" />}
+            <span class="tanaman__nama">{k.nama}</span>
+            <span class="tanaman__jumlah">{jumlah(k.nama)} produk</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

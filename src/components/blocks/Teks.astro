@@ -1,0 +1,8 @@
+---
+import { md } from '../../lib/md';
+const { b } = Astro.props;
+---
+<section class="section section--rapat"><div class={`wrap teks-blok${b.judul ? '' : ' teks-blok--polos'}`}>
+  {b.judul && <h2>{b.judul}</h2>}
+  <div class="prose"><Fragment set:html={md(b.isi)} /></div>
+</div></section>

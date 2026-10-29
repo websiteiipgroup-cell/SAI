@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProdukCard from '../../components/ProdukCard.astro';
+import site from '../../data/site.json';
+import { wa } from '../../lib/md';
+
+export async function getStaticPaths() {
+  return site.komoditas.map((k) => ({ params: { tanaman: k.slug }, props: { k } }));
+}
+const { k } = Astro.props;
+const produk = (await getCollection('produk')).filter((p) => p.data.tanaman.includes(k.nama)).sort((a, b) => a.data.urutan - b.data.urutan);
+const jenis = site.jenis.map((j) => ({ ...j, list: produk.filter((p) => p.data.jenis === j.nama) })).filter((j) => j.list.length);
+---
+<Base title={`Solusi ${k.nama.toLowerCase()}`} description={k.deskripsi} image={k.latar || undefined}>
+  <section class="solusi-head">
+    {k.latar && <img class="solusi-head__bg" src={k.latar} alt="" aria-hidden="true" fetchpriority="high" />}
+    <div class="wrap solusi-head__inner">
+      {k.ikon && <img class="solusi-head__ikon" src={k.ikon} alt="" width="96" height="96" />}
+      <div>
+        <p class="breadcrumb"><a href="/produk/">Produk</a> / Solusi tanaman</p>
+        <h1>Solusi {k.nama.toLowerCase()}</h1>
+        <p>{k.deskripsi}</p>
+      </div>
+    </div>
+  </section>
+  <section class="section"><div class="wrap">
+    <nav class="chips" aria-label="Tanaman lain">
+      <span class="chips__label">Tanaman:</span>
+      {site.komoditas.map((x) => <a class="chip" href={`/solusi/${x.slug}/`} aria-current={x.slug === k.slug ? 'page' : undefined}>{x.nama}</a>)}
+    </nav>
+    {jenis.map((j) => (
+      <div class="kat-blok">
+        <div class="section-head section-head--kecil"><h2>{j.judul}</h2></div>
+        <div class="pgrid">{j.list.map((p) => <ProdukCard p={p} />)}</div>
+      </div>
+    ))}
+    <div class="ajakan">
+      <div><h2>Belum yakin produk mana yang cocok?</h2><p>Ceritakan umur dan gejala tanaman {k.nama.toLowerCase()} Anda. Tim SAGRI bantu pilihkan.</p></div>
+      <a class="btn btn--wa" href={wa(`Halo SAGRI, saya mau tanya produk untuk tanaman ${k.nama.toLowerCase()}.`)}>Tanya via WhatsApp</a>
+    </div>
+  </div></section>
+</Base>

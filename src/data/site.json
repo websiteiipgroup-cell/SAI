@@ -1,0 +1,130 @@
+{
+  "nama_perusahaan": "PT Satya Agro Indonesia",
+  "nama_merek": "SAGRI",
+  "tagline": "SAGRI pilihan petani",
+  "deskripsi": "SAGRI dari PT Satya Agro Indonesia: insektisida, fungisida, herbisida, dan zat pengatur tumbuh untuk padi, jagung, hortikultura, dan bawang.",
+  "logo": "/images/uploads/logo-satya-agro.png",
+  "logo_putih": "/images/uploads/logo-satya-agro-putih.png",
+  "ikon": "/favicon.png",
+  "og_image": "/images/uploads/petani-di-lahan.jpg",
+  "alamat": "Jl. Pluit Raya Kav 133 Blok B No. 8, 9, 10, Jakarta Utara, DKI Jakarta 14440",
+  "link_maps": "https://goo.gl/maps/GJfa5Ddm2m4nw6zX8",
+  "telepon": "+62 21 22459799",
+  "whatsapp": "6281298717838",
+  "whatsapp_tampil": "+62 812 9871 7838",
+  "email": "info@satyaagroindonesia.com",
+  "instagram": "https://instagram.com/sagri_id",
+  "facebook": "https://www.facebook.com/ptsatyaagroindonesia",
+  "tiktok": "https://www.tiktok.com/@sagri_id",
+  "youtube": "https://www.youtube.com/@sagri_id",
+  "menu": [
+    {
+      "label": "Produk",
+      "link": "/produk/"
+    },
+    {
+      "label": "Cerita Sagri",
+      "link": "/cerita-sagri/"
+    },
+    {
+      "label": "Pengetahuan",
+      "link": "/pengetahuan/"
+    },
+    {
+      "label": "Tentang Kami",
+      "link": "/tentang-kami/"
+    },
+    {
+      "label": "Kontak",
+      "link": "/kontak-kami/"
+    }
+  ],
+  "produk_judul": "Produk SAGRI",
+  "produk_pengantar": "Insektisida, fungisida, herbisida, dan zat pengatur tumbuh untuk melindungi tanaman dari hama, penyakit, dan gulma. Pilih tanaman untuk melihat produk yang cocok.",
+  "jenis": [
+    {
+      "nama": "Paket",
+      "judul": "Paket pestisida",
+      "deskripsi": "Kombinasi produk SAGRI dalam satu paket untuk satu masalah tanaman."
+    },
+    {
+      "nama": "Insektisida",
+      "judul": "Insektisida",
+      "deskripsi": "Melindungi tanaman dari serangan hama: ulat, wereng, walang sangit, kutu-kutuan, dan lalat buah."
+    },
+    {
+      "nama": "Fungisida",
+      "judul": "Fungisida",
+      "deskripsi": "Mencegah dan mengendalikan penyakit tanaman karena jamur: blas, bercak, karat, busuk daun, dan moler."
+    },
+    {
+      "nama": "Herbisida",
+      "judul": "Herbisida",
+      "deskripsi": "Mengendalikan gulma yang berebut air, nutrisi, dan ruang dengan tanaman."
+    },
+    {
+      "nama": "Zat pengatur tumbuh",
+      "judul": "Zat pengatur tumbuh",
+      "deskripsi": "Membantu pertumbuhan akar, bunga, dan buah untuk hasil panen yang lebih baik."
+    }
+  ],
+  "komoditas": [
+    {
+      "slug": "padi",
+      "nama": "Padi",
+      "deskripsi": "Produk untuk masalah hama dan penyakit pada tanaman padi: penggerek batang, hama putih palsu, wereng, walang sangit, blas, dan bercak.",
+      "ikon": "/images/uploads/ikon-padi.png",
+      "latar": "/images/uploads/latar-padi.jpg"
+    },
+    {
+      "slug": "jagung",
+      "nama": "Jagung",
+      "deskripsi": "Produk untuk masalah hama, penyakit, dan gulma pada tanaman jagung: ulat grayak, bulai, karat daun, dan gulma.",
+      "ikon": "/images/uploads/ikon-jagung.png",
+      "latar": "/images/uploads/latar-jagung.jpg"
+    },
+    {
+      "slug": "hortikultura",
+      "nama": "Hortikultura",
+      "deskripsi": "Produk untuk masalah hama dan penyakit pada sayuran dan buah-buahan: ulat, kutu daun, trips, lalat buah, patek, dan busuk daun.",
+      "ikon": "/images/uploads/ikon-hortikultura.png",
+      "latar": "/images/uploads/latar-hortikultura.jpg"
+    },
+    {
+      "slug": "bawang",
+      "nama": "Bawang",
+      "deskripsi": "Produk untuk masalah hama dan penyakit pada tanaman bawang: ulat grayak bawang, pengorok daun, moler, dan bercak.",
+      "ikon": "/images/uploads/ikon-bawang.png",
+      "latar": "/images/uploads/latar-bawang.jpg"
+    }
+  ],
+  "grup_keterangan": "Kode grup menunjukkan cara kerja bahan aktif (klasifikasi IRAC untuk insektisida, FRAC untuk fungisida, HRAC untuk herbisida), sama seperti yang tercetak di kemasan. Bergantian memakai produk dengan grup berbeda membantu mencegah hama dan penyakit menjadi kebal.",
+  "cerita_pengantar": "Kegiatan lapangan tim SAGRI bersama petani dan kios pertanian: Product Training, Farmer Meeting, Farmer Field Day, dan One Day Promo.",
+  "kegiatan": [
+    {
+      "nama": "Product Training",
+      "singkatan": "PT",
+      "deskripsi": "Pendalaman cara penggunaan produk SAGRI untuk petani dan kios pertanian.",
+      "gambar": "/images/uploads/kegiatan-product-training.jpg"
+    },
+    {
+      "nama": "Farmer Meeting",
+      "singkatan": "FM",
+      "deskripsi": "Pertemuan dan diskusi dengan petani tentang masalah dan hambatan di lahan pertanian.",
+      "gambar": "/images/uploads/kegiatan-farmer-meeting.jpg"
+    },
+    {
+      "nama": "Farmer Field Day",
+      "singkatan": "FFD",
+      "deskripsi": "Pertemuan petani dan petugas SAGRI di lahan untuk berbagi pengalaman dan melihat hasil di lapangan.",
+      "gambar": "/images/uploads/kegiatan-farmer-field-day.jpg"
+    },
+    {
+      "nama": "One Day Promo",
+      "singkatan": "ODP",
+      "deskripsi": "Promosi penjualan oleh kios pertanian untuk mengenalkan keunggulan produk SAGRI kepada petani, dengan hadiah menarik.",
+      "gambar": ""
+    }
+  ],
+  "pengetahuan_pengantar": "Panduan praktis seputar pestisida, keselamatan, dan budidaya dari tim SAGRI."
+}

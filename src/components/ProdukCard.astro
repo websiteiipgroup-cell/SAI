@@ -1,0 +1,19 @@
+---
+import Foto from './Foto.astro';
+import Grup from './Grup.astro';
+const { p } = Astro.props;
+const d = p.data;
+---
+<a class="pcard" href={`/produk/${p.id}/`}>
+  <div class="pcard__foto">
+    <Foto src={d.gambar} alt={`Kemasan ${d.nama}`} label={d.nama} />
+    {d.baru && <span class="baru">Baru</span>}
+  </div>
+  <div class="pcard__isi">
+    <h3>{d.nama}</h3>
+    <p class="pcard__sifat">{d.sifat}</p>
+    {d.grup.length > 0
+      ? <Grup kode={d.grup} jenis={d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis} />
+      : <span class="pcard__tag">{d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis}</span>}
+  </div>
+</a>

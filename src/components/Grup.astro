@@ -1,0 +1,13 @@
+---
+// Replica of the mode-of-action label printed on Indonesian pesticide packs:
+// "GRUP | 2B | 18 | INSEKTISIDA". Codes follow IRAC / FRAC / HRAC.
+interface Props { kode: string[]; jenis: string; besar?: boolean; }
+const { kode, jenis, besar = false } = Astro.props;
+---
+{kode.length > 0 && (
+  <span class={besar ? 'grup grup--besar' : 'grup'} title="Kode cara kerja bahan aktif, sama seperti di kemasan">
+    <span class="grup__label">Grup</span>
+    {kode.map((k) => <span class="grup__kode">{k}</span>)}
+    <span class="grup__jenis">{jenis}</span>
+  </span>
+)}

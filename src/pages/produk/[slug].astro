@@ -1,0 +1,117 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Foto from '../../components/Foto.astro';
+import Grup from '../../components/Grup.astro';
+import ProdukCard from '../../components/ProdukCard.astro';
+import site from '../../data/site.json';
+import { slugify, wa, komoditasByNama } from '../../lib/md';
+
+export async function getStaticPaths() {
+  const produk = await getCollection('produk');
+  return produk.map((p) => ({ params: { slug: p.id }, props: { p, semua: produk } }));
+}
+const { p, semua } = Astro.props;
+const d = p.data;
+const { Content } = await render(p);
+const jenisInfo = site.jenis.find((j) => j.nama === d.jenis);
+const isi = d.isi_paket.map((id) => semua.find((x) => x.id === id)).filter(Boolean);
+const terkait = semua
+  .filter((x) => x.id !== p.id && !d.isi_paket.includes(x.id) && x.data.tanaman.some((t) => d.tanaman.includes(t)))
+  .sort((a, b) => (a.data.jenis === d.jenis ? 0 : 1) - (b.data.jenis === d.jenis ? 0 : 1) || a.data.urutan - b.data.urutan)
+  .slice(0, 4);
+const label = d.jenis === 'Fungisida' ? 'Penyakit sasaran' : d.jenis === 'Herbisida' ? 'Gulma sasaran' : 'Hama sasaran';
+const jenisPendek = d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis;
+---
+<Base title={d.nama} description={d.ringkasan || `${d.nama}, ${d.sifat.toLowerCase()} dari SAGRI.`} image={d.gambar || undefined}>
+  <section class="produk-top"><div class="wrap">
+    <p class="breadcrumb"><a href="/produk/">Produk</a> / <a href={`/produk/#${slugify(d.jenis)}`}>{jenisInfo?.judul ?? d.jenis}</a></p>
+    <div class="produk-top__grid">
+      <div class="produk-top__foto">
+        <Foto src={d.gambar} alt={`Kemasan ${d.nama}`} label="Foto kemasan belum diunggah" eager />
+      </div>
+      <div class="produk-top__info">
+        {d.baru && <span class="baru baru--teks">Produk baru</span>}
+        <h1>{d.nama}</h1>
+        <p class="produk-top__sifat">{d.sifat}</p>
+        {d.grup.length > 0 && <Grup kode={d.grup} jenis={jenisPendek} besar />}
+        {d.slogan && <p class="produk-top__slogan">{d.slogan}</p>}
+        {d.ringkasan && <p class="produk-top__ringkasan">{d.ringkasan}</p>}
+        <dl class="spek">
+          {d.bahan_aktif && <div><dt>{d.jenis === 'Paket' ? 'Isi paket' : 'Bahan aktif'}</dt><dd>{d.bahan_aktif}</dd></div>}
+          {d.tanaman.length > 0 && (
+            <div><dt>Untuk tanaman</dt><dd class="spek__tanaman">
+              {d.tanaman.map((t) => komoditasByNama[t] ? <a href={`/solusi/${komoditasByNama[t].slug}/`}>{t}</a> : <span>{t}</span>)}
+            </dd></div>
+          )}
+        </dl>
+        <div class="aksi">
+          <a class="btn btn--wa" href={wa(`Halo SAGRI, saya ingin tanya tentang ${d.nama}.`)}>Tanya {d.nama.replace(/ \d.*$/, '')} via WhatsApp</a>
+          {d.cara_pakai.length > 0 && <a class="btn btn--garis" href="#cara-pakai">Lihat cara pakai</a>}
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  {d.keunggulan.length > 0 && (
+    <section class="section section--rapat"><div class="wrap">
+      <ul class="unggul">
+        {d.keunggulan.map((k) => <li><strong>{k.judul}</strong><span>{k.teks}</span></li>)}
+      </ul>
+    </div></section>
+  )}
+
+  {isi.length > 0 && (
+    <section class="section section--rapat"><div class="wrap">
+      <div class="section-head section-head--kecil"><h2>Isi paket</h2></div>
+      <div class="pgrid pgrid--kecil">{isi.map((x) => <ProdukCard p={x} />)}</div>
+    </div></section>
+  )}
+
+  {(d.sasaran.length > 0 || d.foto_sasaran.length > 0) && (
+    <section class="section section--rapat" id="sasaran"><div class={`wrap sasaran${d.foto_sasaran.length ? '' : ' sasaran--polos'}`}>
+      <div>
+        <h2>{label}</h2>
+        {d.sasaran_judul && <p class="lead">{d.sasaran_judul}</p>}
+        {d.sasaran.length > 0 && (
+          <ul class="sasaran__list">
+            {d.sasaran.map((s) => <li><span>{s.nama}</span>{s.latin && <i>{s.latin}</i>}</li>)}
+          </ul>
+        )}
+      </div>
+      {d.foto_sasaran.length > 0 && (
+        <div class="sasaran__foto">
+          {d.foto_sasaran.map((f) => <figure><img src={f.gambar} alt={f.keterangan} loading="lazy" /><figcaption>{f.keterangan}</figcaption></figure>)}
+        </div>
+      )}
+    </div></section>
+  )}
+
+  {p.body?.trim() && (
+    <section class="section section--rapat"><div class="wrap">
+      <div class="info-tambahan prose"><Content /></div>
+    </div></section>
+  )}
+
+  {d.cara_pakai.length > 0 && (
+    <section class="section section--rapat" id="cara-pakai"><div class="wrap cara">
+      <h2>Cara pakai</h2>
+      <div>
+        <ol class="cara__list">{d.cara_pakai.map((c) => <li>{c}</li>)}</ol>
+        <p class="cara__catatan">Baca dan ikuti petunjuk pada label kemasan. Gunakan alat pelindung diri saat mencampur dan menyemprot.
+          <a href="/artikel/gunakan-apd-kurangi-risiko-keracunan-pestisida/">Panduan APD</a></p>
+      </div>
+    </div></section>
+  )}
+
+  {d.grup.length > 0 && (
+    <section class="section section--rapat"><div class="wrap"><p class="catatan-grup">{site.grup_keterangan}</p></div></section>
+  )}
+
+  {terkait.length > 0 && (
+    <section class="section band"><div class="wrap">
+      <div class="section-head"><h2>Produk lain untuk {d.tanaman.length === 1 ? d.tanaman[0].toLowerCase() : 'tanaman yang sama'}</h2></div>
+      <div class="pgrid">{terkait.map((x) => <ProdukCard p={x} />)}</div>
+    </div></section>
+  )}
+</Base>

@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import site from '../../data/site.json';
+import { slugify } from '../../lib/md';
+const { b } = Astro.props;
+const produk = await getCollection('produk');
+const jenis = site.jenis.map((j) => ({ ...j, list: produk.filter((p) => p.data.jenis === j.nama).sort((a, c) => a.data.urutan - c.data.urutan) }))
+  .filter((j) => j.list.length);
+---
+<section class="section band"><div class="wrap">
+  {b.judul && <div class="section-head"><h2>{b.judul}</h2></div>}
+  <div class="jenis">
+    {jenis.map((j) => (
+      <a class="jenis__item" href={`/produk/#${slugify(j.nama)}`}>
+        <span class="jenis__jumlah">{j.list.length}</span>
+        <span class="jenis__nama">{j.judul}</span>
+        <span class="jenis__desk">{j.deskripsi}</span>
+        <span class="jenis__daftar">{j.list.map((p) => p.data.nama.replace(/ \d.*$/, '')).join(', ')}</span>
+      </a>
+    ))}
+  </div>
+</div></section>

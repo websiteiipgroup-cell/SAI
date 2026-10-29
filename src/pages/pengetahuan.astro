@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ArtikelCard from '../components/ArtikelCard.astro';
+import site from '../data/site.json';
+const list = (await getCollection('artikel', (a) => !a.data.draft && a.data.kategori === 'Pengetahuan'))
+  .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
+---
+<Base title="Pengetahuan" description={site.pengetahuan_pengantar}>
+  <section class="page-head"><div class="wrap"><h1>Pengetahuan</h1><p>{site.pengetahuan_pengantar}</p></div></section>
+  <section class="section"><div class="wrap">
+    {list.length === 0
+      ? <p class="lead">Belum ada artikel. Tambahkan lewat admin, menu Artikel.</p>
+      : <div class="agrid">{list.map((a) => <ArtikelCard a={a} ringkas />)}</div>}
+  </div></section>
+</Base>

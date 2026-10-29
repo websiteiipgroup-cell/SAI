@@ -1,0 +1,17 @@
+---
+const { b } = Astro.props;
+const foto = (b.foto ?? []) as { gambar: string; keterangan?: string }[];
+---
+{foto.length > 0 && (
+<section class="section section--rapat"><div class="wrap">
+  {b.judul && <div class="section-head"><h2>{b.judul}</h2></div>}
+  <div class="galeri">
+    {foto.map((f) => (
+      <figure>
+        <img src={f.gambar} alt={f.keterangan ?? ''} loading="lazy" />
+        {f.keterangan && <figcaption>{f.keterangan}</figcaption>}
+      </figure>
+    ))}
+  </div>
+</div></section>
+)}

@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProdukCard from '../../components/ProdukCard.astro';
+import site from '../../data/site.json';
+import { slugify } from '../../lib/md';
+const produk = (await getCollection('produk')).sort((a, b) => a.data.urutan - b.data.urutan);
+const jenis = site.jenis.map((j) => ({ ...j, list: produk.filter((p) => p.data.jenis === j.nama) })).filter((j) => j.list.length);
+---
+<Base title="Produk" description={site.produk_pengantar}>
+  <section class="page-head"><div class="wrap">
+    <h1>{site.produk_judul}</h1>
+    <p>{site.produk_pengantar}</p>
+    <nav class="chips" aria-label="Pilih tanaman">
+      <span class="chips__label">Tanaman:</span>
+      {site.komoditas.map((k) => <a class="chip" href={`/solusi/${k.slug}/`}>{k.nama}</a>)}
+    </nav>
+  </div></section>
+  <section class="section"><div class="wrap">
+    <nav class="chips chips--jenis" aria-label="Lompat ke jenis produk">
+      {jenis.map((j) => <a class="chip chip--garis" href={`#${slugify(j.nama)}`}>{j.judul} <span>{j.list.length}</span></a>)}
+    </nav>
+    {jenis.map((j) => (
+      <div class="kat-blok" id={slugify(j.nama)}>
+        <div class="section-head section-head--kecil"><div><h2>{j.judul}</h2><p class="lead">{j.deskripsi}</p></div></div>
+        <div class="pgrid">{j.list.map((p) => <ProdukCard p={p} />)}</div>
+      </div>
+    ))}
+    <p class="catatan-grup">{site.grup_keterangan}</p>
+  </div></section>
+</Base>
