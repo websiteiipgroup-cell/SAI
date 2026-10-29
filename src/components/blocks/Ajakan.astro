@@ -1,0 +1,10 @@
+---
+import { link } from '../../lib/md';
+const { b } = Astro.props;
+---
+<section class="section section--rapat"><div class="wrap">
+  <div class="ajakan">
+    <div><h2>{b.judul}</h2>{b.teks && <p>{b.teks}</p>}</div>
+    {b.tombol_teks && <a href={link(b.tombol_link)} class={b.tombol_link === 'whatsapp' ? 'btn btn--wa' : 'btn btn--daun'}>{b.tombol_teks}</a>}
+  </div>
+</div></section>

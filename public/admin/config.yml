@@ -1,0 +1,280 @@
+# Repo GitHub website SAGRI. Kalau nama repo beda, ganti baris repo di bawah.
+backend:
+  name: github
+  repo: websiteiipgroup-cell/website-sai
+  branch: main
+
+# Untuk mencoba di komputer sendiri: jalankan `npm run cms` dan `npm run dev`, lalu buka http://localhost:4321/admin/index.html
+local_backend: true
+
+locale: id
+publish_mode: simple
+media_folder: public/images/uploads
+public_folder: /images/uploads
+site_url: https://satyaagroindonesia.com
+logo_url: /favicon.png
+
+collections:
+  - name: produk
+    label: Produk
+    label_singular: Produk
+    folder: src/content/produk
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: nama
+    summary: "{{nama}} ({{jenis}})"
+    sortable_fields: [nama, urutan]
+    description: "Satu entri per produk. Alamat halamannya: satyaagroindonesia.com/produk/nama-produk/"
+    fields:
+      - { label: Nama produk, name: nama, widget: string, hint: "Lengkap dengan formulasi, contoh: Sagri Zeb 85 WP", pattern: ["^[\\s\\S]{1,40}$", "Maksimal 40 karakter"] }
+      - { label: Jenis, name: jenis, widget: select, options: [Paket, Insektisida, Fungisida, Herbisida, Zat pengatur tumbuh] }
+      - { label: Sifat, name: sifat, widget: string, required: false, hint: "Contoh: Fungisida kontak sistemik", pattern: ["^[\\s\\S]{0,50}$", "Maksimal 50 karakter"] }
+      - { label: "Bahan aktif (untuk paket: isi paket)", name: bahan_aktif, widget: string, required: false, hint: "Contoh: Mankozeb 85%" }
+      - { label: Kode grup di kemasan, name: grup, widget: list, required: false, hint: "Satu kode per baris, persis seperti di kemasan. Contoh: 2B lalu 18. Kosongkan untuk ZPT dan paket." }
+      - { label: Cocok untuk tanaman, name: tanaman, widget: select, multiple: true, required: false, options: [Padi, Jagung, Hortikultura, Bawang], hint: "Produk akan muncul di halaman solusi tanaman yang dipilih." }
+      - { label: Slogan, name: slogan, widget: string, required: false, hint: "Contoh: Gulma mati, jagung aman", pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+      - { label: Ringkasan, name: ringkasan, widget: text, hint: "1–2 kalimat. Juga dipakai sebagai deskripsi di Google.", pattern: ["^[\\s\\S]{0,240}$", "Maksimal 240 karakter"] }
+      - { label: Foto kemasan, name: gambar, widget: image, required: false, hint: "PNG latar transparan atau putih, persegi, minimal 900 x 900." }
+      - { label: Tampilkan di Andalan petani (beranda), name: unggulan, widget: boolean, default: false }
+      - { label: Tandai produk baru, name: baru, widget: boolean, default: false }
+      - { label: Urutan tampil, name: urutan, widget: number, value_type: int, default: 99, hint: "Angka kecil tampil lebih dulu." }
+      - label: Isi paket (khusus jenis Paket)
+        name: isi_paket
+        widget: relation
+        collection: produk
+        search_fields: [nama]
+        value_field: "{{slug}}"
+        display_fields: [nama]
+        multiple: true
+        required: false
+      - label: Keunggulan
+        name: keunggulan
+        widget: list
+        required: false
+        summary: "{{fields.judul}}"
+        fields:
+          - { label: Judul, name: judul, widget: string, hint: "1 kata, contoh: Ampuh", pattern: ["^[\\s\\S]{1,20}$", "Maksimal 20 karakter"] }
+          - { label: Keterangan, name: teks, widget: string, pattern: ["^[\\s\\S]{0,90}$", "Maksimal 90 karakter"] }
+      - { label: Judul bagian sasaran, name: sasaran_judul, widget: string, required: false, hint: "Contoh: Penyakit bercak dan karat" }
+      - label: Hama, penyakit, atau gulma sasaran
+        name: sasaran
+        widget: list
+        required: false
+        summary: "{{fields.nama}}"
+        fields:
+          - { label: Nama, name: nama, widget: string }
+          - { label: Nama latin, name: latin, widget: string, required: false, hint: "Contoh: Spodoptera frugiperda" }
+      - { label: Cara pakai, name: cara_pakai, widget: list, required: false, field: { label: Langkah, name: langkah, widget: text } }
+      - label: Foto hama atau gejala
+        name: foto_sasaran
+        widget: list
+        required: false
+        summary: "{{fields.keterangan}}"
+        fields:
+          - { label: Foto, name: gambar, widget: image }
+          - { label: Keterangan, name: keterangan, widget: string, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+      - { label: Info tambahan, name: body, widget: markdown, required: false, hint: "Contoh: Bahaya serangan wereng. Tampil di kotak sebelum cara pakai." }
+
+  - name: artikel
+    label: Artikel
+    label_singular: Artikel
+    folder: src/content/artikel
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: judul
+    summary: "{{tanggal | date('YYYY-MM-DD')}} · {{kategori}} · {{judul}}"
+    sortable_fields: [tanggal, judul]
+    description: "Cerita Sagri (kegiatan lapangan) dan Pengetahuan (panduan untuk petani)."
+    fields:
+      - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{1,110}$", "Maksimal 110 karakter"] }
+      - { label: Tanggal, name: tanggal, widget: datetime, date_format: "DD-MM-YYYY", time_format: false, format: "YYYY-MM-DD" }
+      - { label: Kategori, name: kategori, widget: select, options: [Cerita Sagri, Pengetahuan], default: Cerita Sagri }
+      - { label: Jenis kegiatan (khusus Cerita Sagri), name: kegiatan, widget: select, required: false, options: ["", Product Training, Farmer Meeting, Farmer Field Day, One Day Promo] }
+      - { label: Foto sampul, name: cover, widget: image, required: false, hint: "Landscape 3:2, minimal 1200 x 800." }
+      - { label: Ringkasan, name: ringkasan, widget: text, required: false, hint: "1 kalimat untuk daftar artikel dan Google.", pattern: ["^[\\s\\S]{0,200}$", "Maksimal 200 karakter"] }
+      - { label: Simpan sebagai draf (tidak tampil), name: draft, widget: boolean, default: false }
+      - { label: Isi, name: body, widget: markdown }
+
+  - name: halaman
+    label: Halaman
+    label_singular: Halaman
+    folder: src/content/halaman
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: judul
+    description: "Halaman 'Beranda' adalah homepage, jangan dihapus. Halaman baru tampil di satyaagroindonesia.com/nama-halaman/ dan bisa ditambahkan ke menu lewat Pengaturan."
+    fields:
+      - { label: Judul halaman, name: judul, widget: string, pattern: ["^[\\s\\S]{0,60}$", "Maksimal 60 karakter"] }
+      - { label: Deskripsi untuk Google (1 kalimat), name: deskripsi, widget: text, required: false, pattern: ["^[\\s\\S]{0,160}$", "Maksimal 160 karakter"] }
+      - label: Isi halaman (susun blok)
+        name: blocks
+        widget: list
+        label_singular: blok
+        types:
+          - label: Hero pilih tanaman
+            name: hero_tanaman
+            widget: object
+            summary: "Hero: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{0,70}$", "Maksimal 70 karakter"] }
+              - { label: Deskripsi, name: deskripsi, widget: text, required: false, pattern: ["^[\\s\\S]{0,180}$", "Maksimal 180 karakter"] }
+              - { label: Foto latar, name: latar, widget: image, required: false, hint: "Landscape, minimal 1920 x 900. Digelapkan otomatis di sisi kiri." }
+          - label: Judul halaman (pita hijau muda)
+            name: judul_halaman
+            widget: object
+            summary: "Judul: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{0,80}$", "Maksimal 80 karakter"] }
+              - { label: Deskripsi, name: deskripsi, widget: text, required: false, pattern: ["^[\\s\\S]{0,220}$", "Maksimal 220 karakter"] }
+          - label: Produk andalan (otomatis dari produk bertanda Andalan)
+            name: produk_unggulan
+            widget: object
+            summary: "Produk andalan: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string }
+              - { label: Pengantar, name: intro, widget: string, required: false }
+          - label: Jenis produk (otomatis)
+            name: jenis_produk
+            widget: object
+            summary: "Jenis produk"
+            fields:
+              - { label: Judul, name: judul, widget: string }
+          - label: Testimoni petani
+            name: testimoni
+            widget: object
+            summary: "Testimoni: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string }
+              - label: Testimoni
+                name: items
+                widget: list
+                summary: "{{fields.nama}}"
+                fields:
+                  - { label: Nama, name: nama, widget: string }
+                  - { label: Keterangan, name: keterangan, widget: string, required: false, hint: "Contoh: Petani padi, Subang" }
+                  - { label: Foto, name: foto, widget: image, required: false }
+                  - { label: Kutipan, name: kutipan, widget: text, pattern: ["^[\\s\\S]{0,260}$", "Maksimal 260 karakter"] }
+          - label: Artikel terbaru (otomatis)
+            name: artikel_terbaru
+            widget: object
+            summary: "Artikel terbaru: {{fields.kategori}}"
+            fields:
+              - { label: Judul, name: judul, widget: string }
+              - { label: Kategori, name: kategori, widget: select, options: [Cerita Sagri, Pengetahuan] }
+              - { label: Jumlah, name: jumlah, widget: number, value_type: int, default: 3, min: 1, max: 6 }
+          - label: Teks
+            name: teks
+            widget: object
+            summary: "Teks: {{fields.judul}}"
+            fields:
+              - { label: Subjudul (kiri), name: judul, widget: string, required: false }
+              - { label: Isi, name: isi, widget: markdown }
+          - label: Teks dengan foto
+            name: teks_foto
+            widget: object
+            summary: "Teks + foto: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, required: false }
+              - { label: Isi, name: isi, widget: markdown }
+              - { label: Foto, name: gambar, widget: image, required: false }
+              - { label: Keterangan foto (untuk tunanetra dan Google), name: gambar_alt, widget: string, required: false }
+              - { label: Posisi foto, name: posisi_foto, widget: select, options: [kanan, kiri], default: kanan }
+          - label: Galeri foto
+            name: galeri
+            widget: object
+            summary: "Galeri: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, required: false }
+              - label: Foto
+                name: foto
+                widget: list
+                summary: "{{fields.keterangan}}"
+                fields:
+                  - { label: Foto, name: gambar, widget: image }
+                  - { label: Keterangan, name: keterangan, widget: string, required: false }
+          - label: Ajakan dengan tombol
+            name: ajakan
+            widget: object
+            summary: "Ajakan: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{0,70}$", "Maksimal 70 karakter"] }
+              - { label: Teks, name: teks, widget: text, required: false }
+              - { label: Teks tombol, name: tombol_teks, widget: string, required: false }
+              - { label: Link tombol, name: tombol_link, widget: string, required: false, hint: "Ketik whatsapp untuk membuka WhatsApp SAGRI, atau alamat seperti /produk/" }
+          - label: Kontak dan form WhatsApp
+            name: kontak
+            widget: object
+            summary: "Kontak: {{fields.judul}}"
+            fields:
+              - { label: Judul, name: judul, widget: string }
+
+  - name: pengaturan
+    label: Pengaturan
+    files:
+      - name: situs
+        label: Pengaturan situs
+        file: src/data/site.json
+        fields:
+          - { label: Nama perusahaan, name: nama_perusahaan, widget: string }
+          - { label: Nama merek, name: nama_merek, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Deskripsi untuk Google, name: deskripsi, widget: text, pattern: ["^[\\s\\S]{0,160}$", "Maksimal 160 karakter"] }
+          - { label: Logo (header), name: logo, widget: image, required: false }
+          - { label: Logo putih (footer), name: logo_putih, widget: image, required: false }
+          - { label: Ikon tab browser, name: ikon, widget: image, required: false }
+          - { label: Gambar saat dibagikan di WhatsApp/medsos, name: og_image, widget: image, required: false }
+          - { label: Alamat kantor, name: alamat, widget: text }
+          - { label: Link Google Maps, name: link_maps, widget: string, required: false }
+          - { label: Telepon kantor, name: telepon, widget: string }
+          - { label: "Nomor WhatsApp (format 628xxx tanpa + dan spasi)", name: whatsapp, widget: string, pattern: ["^(62[0-9]{8,13})?$", "Format 628xxxxxxxxx"] }
+          - { label: Nomor WhatsApp yang ditampilkan, name: whatsapp_tampil, widget: string }
+          - { label: Email, name: email, widget: string }
+          - { label: Instagram, name: instagram, widget: string, required: false }
+          - { label: Facebook, name: facebook, widget: string, required: false }
+          - { label: TikTok, name: tiktok, widget: string, required: false }
+          - { label: YouTube, name: youtube, widget: string, required: false }
+          - label: Menu
+            name: menu
+            widget: list
+            summary: "{{fields.label}} → {{fields.link}}"
+            fields:
+              - { label: Teks menu, name: label, widget: string }
+              - { label: Link, name: link, widget: string, hint: "Contoh: /produk/ atau /tentang-kami/" }
+          - { label: Judul halaman Produk, name: produk_judul, widget: string }
+          - { label: Pengantar halaman Produk, name: produk_pengantar, widget: text }
+          - label: Jenis produk
+            name: jenis
+            widget: list
+            allow_add: false
+            summary: "{{fields.judul}}"
+            fields:
+              - { label: Nama (jangan diubah), name: nama, widget: hidden }
+              - { label: Judul, name: judul, widget: string }
+              - { label: Deskripsi, name: deskripsi, widget: text }
+          - label: Tanaman (halaman solusi)
+            name: komoditas
+            widget: list
+            allow_add: false
+            summary: "{{fields.nama}}"
+            fields:
+              - { label: Alamat (jangan diubah), name: slug, widget: hidden }
+              - { label: Nama (jangan diubah), name: nama, widget: hidden }
+              - { label: Deskripsi, name: deskripsi, widget: text }
+              - { label: Ikon, name: ikon, widget: image, required: false }
+              - { label: Foto latar, name: latar, widget: image, required: false }
+          - { label: Keterangan kode grup, name: grup_keterangan, widget: text }
+          - { label: Pengantar Cerita Sagri, name: cerita_pengantar, widget: text }
+          - label: Jenis kegiatan (Cerita Sagri)
+            name: kegiatan
+            widget: list
+            allow_add: false
+            summary: "{{fields.nama}}"
+            fields:
+              - { label: Nama (jangan diubah), name: nama, widget: hidden }
+              - { label: Singkatan, name: singkatan, widget: string }
+              - { label: Deskripsi, name: deskripsi, widget: text }
+              - { label: Foto, name: gambar, widget: image, required: false }
+          - { label: Pengantar Pengetahuan, name: pengetahuan_pengantar, widget: text }

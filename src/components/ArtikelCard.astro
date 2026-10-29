@@ -1,0 +1,12 @@
+---
+import Foto from './Foto.astro';
+import { tanggal } from '../lib/md';
+const { a, ringkas = false } = Astro.props;
+const d = a.data;
+---
+<a class="acard" href={`/artikel/${a.id}/`}>
+  <div class="acard__cover"><Foto src={d.cover} alt="" label={d.kegiatan || d.kategori} /></div>
+  <p class="acard__meta">{d.kegiatan || d.kategori}, {tanggal(d.tanggal)}</p>
+  <h3>{d.judul}</h3>
+  {ringkas && d.ringkasan && <p class="acard__ringkas">{d.ringkasan}</p>}
+</a>
