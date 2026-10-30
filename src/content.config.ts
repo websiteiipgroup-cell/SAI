@@ -38,6 +38,10 @@ const artikel = defineCollection({
     kegiatan: z.string().optional().default(''),
     cover: z.string().optional().default(''),
     ringkasan: z.string().optional().default(''),
+    // Swipeable photo album shown at the top of the article (replaces the cover on the article page).
+    album: z.array(z.object({ gambar: z.string(), keterangan: z.string().optional().default('') })).optional().default([]),
+    // Optional link to the matching Instagram post.
+    instagram: z.string().optional().default(''),
     draft: z.boolean().optional().default(false),
   }),
 });

@@ -5,6 +5,11 @@ kategori: "Cerita Sagri"
 kegiatan: "Farmer Field Day"
 cover: "/images/uploads/cover-product-training-dan-farmer-field-day-mojokerto.jpg"
 ringkasan: "Kabupaten Mojokerto merupakan salah satu wilayah penghasil jagung yang tinggi di Jawa Timur."
+album:
+  - gambar: "/images/uploads/img20221128135108-1024x576.jpg"
+    keterangan: ""
+  - gambar: "/images/uploads/img20221128142618-1024x458.jpg"
+    keterangan: ""
 draft: false
 ---
 
@@ -18,5 +23,3 @@ Tim Marketing Support dan SPV Wilayah juga sebelumnya melakukan training serupa 
 
 Kontributor cerita lapang – Zhuhri Azzhuhri (Marketing Support), Achmad Riswan (SPV Wilayah Jawa Timur 2)
 
-![](/images/uploads/img20221128135108-1024x576.jpg)
-![](/images/uploads/img20221128142618-1024x458.jpg)

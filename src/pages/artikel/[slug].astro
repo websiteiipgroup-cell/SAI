@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ArtikelCard from '../../components/ArtikelCard.astro';
+import Album from '../../components/Album.astro';
+import InstagramAjak from '../../components/InstagramAjak.astro';
 import { tanggal } from '../../lib/md';
 export async function getStaticPaths() {
   const list = await getCollection('artikel', (a) => !a.data.draft);
@@ -16,15 +18,21 @@ const lain = semua.filter((x) => x.id !== a.id && x.data.kategori === d.kategori
 ---
 <Base title={d.judul} description={d.ringkasan || undefined} image={d.cover || undefined}>
   <article class="artikel"><div class="wrap wrap--sempit">
-    <p class="breadcrumb"><a href={induk.href}>{induk.label}</a>{d.kegiatan && <> / {d.kegiatan}</>}</p>
+    <p class="breadcrumb"><a href="/kabar/">Kabar</a> / <a href={induk.href}>{induk.label}</a>{d.kegiatan && <> / {d.kegiatan}</>}</p>
     <h1>{d.judul}</h1>
     <p class="artikel__tanggal"><time datetime={d.tanggal.toISOString().slice(0, 10)}>{tanggal(d.tanggal)}</time></p>
-    {d.cover && <img class="artikel__cover" src={d.cover} alt="" />}
+    {d.album.length > 0
+      ? <Album foto={d.album} judul={d.judul} />
+      : d.cover && <img class="artikel__cover" src={d.cover} alt="" />}
     <div class="prose prose--artikel"><Content /></div>
+    {d.instagram && (
+      <p class="artikel__ig"><a class="btn btn--ig" href={d.instagram} target="_blank" rel="noopener">Lihat postingan ini di Instagram</a></p>
+    )}
+    <div class="artikel__ajak"><InstagramAjak judul="Ikuti kabar SAGRI lainnya" /></div>
   </div></article>
   {lain.length > 0 && (
     <section class="section band"><div class="wrap">
-      <div class="section-head"><h2>{induk.label} lainnya</h2><a class="link-panah" href={induk.href}>Lihat semua</a></div>
+      <div class="section-head"><h2>{induk.label} lainnya</h2><a class="link-panah" href="/kabar/#artikel">Semua kabar</a></div>
       <div class="agrid">{lain.map((x) => <ArtikelCard a={x} />)}</div>
     </div></section>
   )}

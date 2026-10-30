@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ArtikelCard from '../components/ArtikelCard.astro';
+import InstagramPost from '../components/InstagramPost.astro';
+import InstagramAjak from '../components/InstagramAjak.astro';
+import site from '../data/site.json';
+import { igHandle } from '../lib/md';
+const artikel = (await getCollection('artikel', (a) => !a.data.draft))
+  .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
+const posts = (site.instagram_posts ?? []).filter(Boolean).slice(0, 9);
+const handle = igHandle(site.instagram);
+const jumlah = (k: string) => artikel.filter((a) => a.data.kategori === k).length;
+---
+<Base title={site.kabar_judul} description={site.kabar_pengantar}>
+  <section class="page-head"><div class="wrap">
+    <h1>{site.kabar_judul}</h1>
+    <p>{site.kabar_pengantar}</p>
+    <nav class="chips" aria-label="Bagian halaman">
+      {site.instagram && <a class="chip" href="#instagram">Instagram</a>}
+      <a class="chip" href="#artikel">Artikel <span>{artikel.length}</span></a>
+    </nav>
+  </div></section>
+
+  {site.instagram && (
+    <section class="section" id="instagram"><div class="wrap">
+      <div class="section-head">
+        <div><h2>{site.instagram_judul} <a class="ig-handle" href={site.instagram} target="_blank" rel="noopener">{handle}</a></h2></div>
+        {posts.length > 0 && <a class="btn btn--ig" href={site.instagram} target="_blank" rel="noopener">Ikuti {handle}</a>}
+      </div>
+      {posts.length > 0
+        ? <div class="iggrid">{posts.map((u) => <InstagramPost url={u} />)}</div>
+        : <InstagramAjak />}
+    </div></section>
+  )}
+
+  <section class="section band" id="artikel"><div class="wrap">
+    <div class="section-head">
+      <h2>{site.artikel_judul}</h2>
+      <nav class="chips chips--rapat" aria-label="Kategori artikel">
+        <a class="chip" href="/kabar/#artikel" aria-current="page">Semua <span>{artikel.length}</span></a>
+        <a class="chip" href="/cerita-sagri/">Cerita Sagri <span>{jumlah('Cerita Sagri')}</span></a>
+        <a class="chip" href="/pengetahuan/">Pengetahuan <span>{jumlah('Pengetahuan')}</span></a>
+      </nav>
+    </div>
+    {artikel.length === 0
+      ? <p class="lead">Belum ada artikel. Tambahkan lewat admin, menu Artikel.</p>
+      : <div class="agrid">{artikel.map((a) => <ArtikelCard a={a} ringkas />)}</div>}
+  </div></section>
+</Base>

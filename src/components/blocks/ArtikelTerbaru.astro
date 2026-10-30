@@ -1,14 +1,20 @@
 ---
 import { getCollection } from 'astro:content';
 import ArtikelCard from '../ArtikelCard.astro';
+import site from '../../data/site.json';
+import { igHandle } from '../../lib/md';
 const { b } = Astro.props;
 const list = (await getCollection('artikel', (a) => !a.data.draft && (!b.kategori || a.data.kategori === b.kategori)))
   .sort((a, c) => c.data.tanggal.valueOf() - a.data.tanggal.valueOf()).slice(0, b.jumlah || 3);
-const semua = b.kategori === 'Pengetahuan' ? '/pengetahuan/' : '/cerita-sagri/';
+const semua = '/kabar/';
 ---
 {list.length > 0 && (
 <section class="section"><div class="wrap">
-  <div class="section-head">{b.judul && <h2>{b.judul}</h2>}<a class="link-panah" href={semua}>Lihat semua</a></div>
+  <div class="section-head">{b.judul && <h2>{b.judul}</h2>}
+    <span class="section-head__link">
+      {site.instagram && <a class="link-panah" href={site.instagram} target="_blank" rel="noopener">Instagram {igHandle(site.instagram)}</a>}
+      <a class="link-panah" href={semua}>Semua kabar</a>
+    </span></div>
   <div class="agrid">{list.map((a) => <ArtikelCard a={a} />)}</div>
 </div></section>
 )}

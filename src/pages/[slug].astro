@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import Blocks from '../components/blocks/Blocks.astro';
 export async function getStaticPaths() {
   // Page names used by the system can't be CMS pages.
-  const RESERVED = ['beranda', 'produk', 'solusi', 'artikel', 'cerita-sagri', 'pengetahuan', 'admin', 'api', '404'];
+  const RESERVED = ['beranda', 'produk', 'solusi', 'artikel', 'cerita-sagri', 'pengetahuan', 'kabar', 'admin', 'api', '404'];
   const pages = await getCollection('halaman');
   return pages.filter((p) => !RESERVED.includes(p.id)).map((p) => ({ params: { slug: p.id }, props: { page: p } }));
 }

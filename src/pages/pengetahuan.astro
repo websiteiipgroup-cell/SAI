@@ -7,7 +7,7 @@ const list = (await getCollection('artikel', (a) => !a.data.draft && a.data.kate
   .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
 ---
 <Base title="Pengetahuan" description={site.pengetahuan_pengantar}>
-  <section class="page-head"><div class="wrap"><h1>Pengetahuan</h1><p>{site.pengetahuan_pengantar}</p></div></section>
+  <section class="page-head"><div class="wrap"><p class="breadcrumb"><a href="/kabar/">Kabar</a></p><h1>Pengetahuan</h1><p>{site.pengetahuan_pengantar}</p></div></section>
   <section class="section"><div class="wrap">
     {list.length === 0
       ? <p class="lead">Belum ada artikel. Tambahkan lewat admin, menu Artikel.</p>

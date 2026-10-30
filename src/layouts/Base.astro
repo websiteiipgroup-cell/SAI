@@ -31,7 +31,7 @@ const schema = {
   <meta property="og:url" content={new URL(path, Astro.site)}>
   <meta name="theme-color" content="#1f4d2b">
   <link rel="icon" href={site.ikon || '/favicon.png'}>
-  <link rel="apple-touch-icon" href="/favicon.png">
+  <link rel="apple-touch-icon" href={site.ikon || '/favicon.png'}>
   <link rel="preload" href="/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </head>

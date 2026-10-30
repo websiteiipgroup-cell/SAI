@@ -23,12 +23,8 @@
       "link": "/produk/"
     },
     {
-      "label": "Cerita Sagri",
-      "link": "/cerita-sagri/"
-    },
-    {
-      "label": "Pengetahuan",
-      "link": "/pengetahuan/"
+      "label": "Kabar",
+      "link": "/kabar/"
     },
     {
       "label": "Tentang Kami",
@@ -126,5 +122,10 @@
       "gambar": ""
     }
   ],
-  "pengetahuan_pengantar": "Panduan praktis seputar pestisida, keselamatan, dan budidaya dari tim SAGRI."
+  "pengetahuan_pengantar": "Panduan praktis seputar pestisida, keselamatan, dan budidaya dari tim SAGRI.",
+  "kabar_judul": "Kabar SAGRI",
+  "kabar_pengantar": "Ikuti kegiatan tim SAGRI bersama petani dan kios, dari Instagram dan artikel yang kami tulis.",
+  "instagram_judul": "Dari Instagram",
+  "instagram_posts": [],
+  "artikel_judul": "Artikel"
 }

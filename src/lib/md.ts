@@ -15,6 +15,12 @@ export const wa = (text?: string) =>
 /** CMS link fields accept the shortcut "whatsapp". */
 export const link = (href?: string) => (href === 'whatsapp' ? wa() : href || '#');
 
+/** "@sagri_id" from an Instagram profile URL. */
+export const igHandle = (url?: string) => {
+  const m = (url || '').match(/instagram\.com\/([A-Za-z0-9._]+)/);
+  return m ? '@' + m[1] : 'Instagram';
+};
+
 export const tanggal = (d: Date) => d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
 export const komoditasBySlug = Object.fromEntries(site.komoditas.map((k) => [k.slug, k]));

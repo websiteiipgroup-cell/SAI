@@ -1,0 +1,11 @@
+---
+// Official Instagram embed for one post or reel, from a pasted link like
+// https://www.instagram.com/p/ABC123/ or https://www.instagram.com/reel/ABC123/?igsh=...
+const { url } = Astro.props;
+const m = String(url || '').match(/instagram\.com\/(?:[A-Za-z0-9._]+\/)?(p|reel|tv)\/([A-Za-z0-9_-]+)/);
+---
+{m && (
+  <div class="igpost">
+    <iframe src={`https://www.instagram.com/${m[1]}/${m[2]}/embed/captioned/`} title="Postingan Instagram SAGRI" loading="lazy" scrolling="no" allowtransparency="true"></iframe>
+  </div>
+)}

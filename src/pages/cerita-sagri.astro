@@ -9,7 +9,7 @@ const list = (await getCollection('artikel', (a) => !a.data.draft && a.data.kate
   .sort((a, b) => b.data.tanggal.valueOf() - a.data.tanggal.valueOf());
 ---
 <Base title="Cerita Sagri" description={site.cerita_pengantar}>
-  <section class="page-head"><div class="wrap"><h1>Cerita Sagri</h1><p>{site.cerita_pengantar}</p></div></section>
+  <section class="page-head"><div class="wrap"><p class="breadcrumb"><a href="/kabar/">Kabar</a></p><h1>Cerita Sagri</h1><p>{site.cerita_pengantar}</p></div></section>
   <section class="section"><div class="wrap">
     <div class="kegiatan">
       {site.kegiatan.map((k) => {

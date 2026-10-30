@@ -1,0 +1,16 @@
+---
+import site from '../data/site.json';
+import { igHandle } from '../lib/md';
+const { judul = 'Kabar terbaru ada di Instagram', teks = 'Foto kegiatan lapangan, promo kios, dan tips budidaya dari tim SAGRI setiap minggu.' } = Astro.props;
+const handle = igHandle(site.instagram);
+---
+{site.instagram && (
+  <div class="ig-ajak">
+    <svg class="ig-ajak__ikon" viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg>
+    <div class="ig-ajak__teks">
+      <h2>{judul}</h2>
+      <p>{teks}</p>
+    </div>
+    <a class="btn btn--ig" href={site.instagram} target="_blank" rel="noopener">Ikuti {handle}</a>
+  </div>
+)}

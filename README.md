@@ -18,16 +18,25 @@ npm run cms          # (terminal kedua) admin lokal di http://localhost:4321/adm
 | Menu admin | Isi | Lokasi file |
 | --- | --- | --- |
 | Produk | 15 produk + Paket Clean Beat: jenis, sifat, bahan aktif, kode grup, tanaman, keunggulan, sasaran, cara pakai, foto hama | `src/content/produk/*.md` |
-| Artikel | Cerita Sagri (kegiatan lapangan) dan Pengetahuan | `src/content/artikel/*.md` |
+| Artikel | Artikel berkala di halaman Kabar: Cerita Sagri (kegiatan lapangan) dan Pengetahuan, dengan album foto geser kiri-kanan dan link ke postingan Instagram | `src/content/artikel/*.md` |
 | Halaman | Beranda, Tentang Kami, Kontak Kami, dan halaman baru, disusun dari blok | `src/content/halaman/*.md` |
-| Pengaturan | Logo, alamat, telepon, WhatsApp, email, medsos, menu, teks jenis produk, halaman solusi tanaman, jenis kegiatan | `src/data/site.json` |
+| Pengaturan | Logo, alamat, telepon, WhatsApp, email, medsos, menu, teks jenis produk, halaman solusi tanaman, jenis kegiatan, postingan Instagram di halaman Kabar | `src/data/site.json` |
 
 Halaman yang dibuat otomatis dari data produk:
 
 - `/produk/`: katalog per jenis (paket, insektisida, fungisida, herbisida, ZPT).
 - `/produk/nama-produk/`: detail produk.
 - `/solusi/padi/`, `/solusi/jagung/`, `/solusi/hortikultura/`, `/solusi/bawang/`: produk yang dicentang untuk tanaman itu.
+- `/kabar/`: dua area. (1) Instagram: postingan yang linknya ditempel di Pengaturan → Postingan Instagram, tampil sebagai
+  embed resmi Instagram (maksimal 9). Kalau daftarnya kosong, tampil tombol Ikuti @sagri_id. (2) Artikel: semua artikel, terbaru di atas.
 - `/cerita-sagri/` dan `/pengetahuan/`: daftar artikel per kategori.
+
+Album foto artikel: di form artikel, isi "Album foto (geser kiri-kanan)" dengan 2 foto atau lebih. Album tampil di atas
+artikel menggantikan foto sampul; di HP digeser dengan jari, di komputer pakai tombol panah. Foto sampul tetap dipakai di
+daftar artikel.
+
+Postingan Instagram tidak masuk otomatis: menampilkan feed yang update sendiri butuh token API Meta dari akun bisnis
+Instagram SAGRI. Kalau nanti mau otomatis, area Instagram bisa diganti tanpa mengubah bagian lain.
 
 Jenis blok halaman: Hero pilih tanaman, Judul halaman, Produk andalan (otomatis dari produk bertanda Andalan),
 Jenis produk (otomatis), Testimoni petani, Artikel terbaru (otomatis), Teks, Teks dengan foto, Galeri, Ajakan dengan
@@ -36,7 +45,7 @@ tombol, Kontak dan form WhatsApp.
 Label hitam-putih "GRUP" di setiap produk meniru kotak kode cara kerja (IRAC/FRAC/HRAC) di kemasan. Isi kodenya di
 kolom "Kode grup di kemasan", satu kode per baris.
 
-Nama halaman `beranda`, `produk`, `solusi`, `artikel`, `cerita-sagri`, `pengetahuan`, `admin`, dan `api` sudah dipakai sistem.
+Nama halaman `beranda`, `produk`, `solusi`, `artikel`, `kabar`, `cerita-sagri`, `pengetahuan`, `admin`, dan `api` sudah dipakai sistem.
 
 ## Online-kan (Cloudflare Pages)
 
@@ -85,4 +94,5 @@ artikel (`/2023/01/06/product-training-tim-sulawesi/` → `/artikel/product-trai
 - **One Day Promo** belum punya foto (foto lama berlabel Farmer Field Day).
 - Foto kemasan produk lama (2023) resolusinya kecil (500 px). Ganti dengan foto kemasan baru minimal 900 × 900.
 - Facebook dan YouTube di situs lama ada dua alamat berbeda. Yang dipakai: facebook.com/ptsatyaagroindonesia dan youtube.com/@sagri_id.
-- Artikel lama dipindahkan apa adanya; typo di isi artikel belum dibetulkan.
+- Artikel lama dipindahkan apa adanya; typo di isi artikel belum dibetulkan. Foto di dalam artikel lama sudah dipindah ke album.
+- Tempel 3, 6, atau 9 link postingan Instagram terbaru di Pengaturan supaya area Instagram di halaman Kabar terisi.
