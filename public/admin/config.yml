@@ -86,7 +86,7 @@ collections:
     identifier_field: judul
     summary: "{{tanggal | date('YYYY-MM-DD')}} · {{kategori}} · {{judul}}"
     sortable_fields: [tanggal, judul]
-    description: "Cerita Sagri (kegiatan lapangan) dan Pengetahuan (panduan untuk petani)."
+    description: "Artikel berkala di halaman Kabar: Cerita Sagri (kegiatan lapangan) dan Pengetahuan (panduan untuk petani). Klik tombol + Artikel untuk menulis baru."
     fields:
       - { label: Judul, name: judul, widget: string, pattern: ["^[\\s\\S]{1,110}$", "Maksimal 110 karakter"] }
       - { label: Tanggal, name: tanggal, widget: datetime, date_format: "DD-MM-YYYY", time_format: false, format: "YYYY-MM-DD" }
@@ -94,6 +94,17 @@ collections:
       - { label: Jenis kegiatan (khusus Cerita Sagri), name: kegiatan, widget: select, required: false, options: ["", Product Training, Farmer Meeting, Farmer Field Day, One Day Promo] }
       - { label: Foto sampul, name: cover, widget: image, required: false, hint: "Landscape 3:2, minimal 1200 x 800." }
       - { label: Ringkasan, name: ringkasan, widget: text, required: false, hint: "1 kalimat untuk daftar artikel dan Google.", pattern: ["^[\\s\\S]{0,200}$", "Maksimal 200 karakter"] }
+      - label: Album foto (geser kiri-kanan)
+        name: album
+        widget: list
+        required: false
+        max: 10
+        summary: "{{fields.keterangan}}"
+        hint: "Isi 2 foto atau lebih supaya tampil sebagai album di atas artikel, menggantikan foto sampul. Urutan bisa digeser."
+        fields:
+          - { label: Foto, name: gambar, widget: image }
+          - { label: Keterangan, name: keterangan, widget: string, required: false, pattern: ["^[\\s\\S]{0,120}$", "Maksimal 120 karakter"] }
+      - { label: Link postingan Instagram, name: instagram, widget: string, required: false, hint: "Opsional. Contoh: https://www.instagram.com/p/xxxxx/ (salin dari tombol Bagikan di Instagram)." }
       - { label: Simpan sebagai draf (tidak tampil), name: draft, widget: boolean, default: false }
       - { label: Isi, name: body, widget: markdown }
 
@@ -278,3 +289,14 @@ collections:
               - { label: Deskripsi, name: deskripsi, widget: text }
               - { label: Foto, name: gambar, widget: image, required: false }
           - { label: Pengantar Pengetahuan, name: pengetahuan_pengantar, widget: text }
+          - { label: Judul halaman Kabar, name: kabar_judul, widget: string }
+          - { label: Pengantar halaman Kabar, name: kabar_pengantar, widget: text }
+          - { label: Judul area Instagram, name: instagram_judul, widget: string }
+          - label: Postingan Instagram di halaman Kabar
+            name: instagram_posts
+            widget: list
+            required: false
+            max: 9
+            hint: "Tempel link postingan atau reel, satu per baris, yang terbaru di paling atas. Di Instagram: buka postingan → ikon kirim/titik tiga → Salin tautan. Kalau kosong, tampil tombol Ikuti Instagram saja."
+            field: { label: Link postingan, name: url, widget: string, pattern: ["^https://(www\\.)?instagram\\.com/.*(p|reel|tv)/.+", "Harus link postingan Instagram, contoh https://www.instagram.com/p/xxxxx/"] }
+          - { label: Judul area Artikel, name: artikel_judul, widget: string }
