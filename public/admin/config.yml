@@ -1,4 +1,4 @@
-# Repo GitHub website SAGRI. Kalau nama repo beda, ganti baris repo di bawah.
+# Repo GitHub website SAGRI (websiteiipgroup-cell/SAI). Kalau nama repo beda, ganti baris repo di bawah.
 backend:
   name: github
   repo: websiteiipgroup-cell/SAI
@@ -11,7 +11,7 @@ locale: id
 publish_mode: simple
 media_folder: public/images/uploads
 public_folder: /images/uploads
-site_url: https://satyaagroindonesia.com
+site_url: https://www.satyaagroindonesia.com
 logo_url: /favicon.png
 
 collections:
@@ -292,7 +292,9 @@ collections:
           - { label: Judul halaman Kabar, name: kabar_judul, widget: string }
           - { label: Pengantar halaman Kabar, name: kabar_pengantar, widget: text }
           - { label: Judul area Instagram, name: instagram_judul, widget: string }
-          - label: Postingan Instagram di halaman Kabar
+          - { label: Behold feed ID (feed Instagram otomatis), name: behold_feed_id, widget: string, required: false, hint: "Dari behold.so → feed → JSON feed URL, ambil bagian setelah feeds.behold.so/ . Kalau diisi, postingan terbaru @sagri_id tampil otomatis dan daftar link di bawah tidak dipakai.", pattern: ["^[A-Za-z0-9]*$", "Isi ID saja, tanpa https://feeds.behold.so/"] }
+          - { label: Jumlah postingan otomatis, name: instagram_jumlah, widget: select, options: ["3", "6", "9"], default: "6" }
+          - label: Postingan Instagram manual (kalau Behold tidak dipakai)
             name: instagram_posts
             widget: list
             required: false

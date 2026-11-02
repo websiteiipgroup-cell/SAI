@@ -27,9 +27,9 @@
 /sagri-clean-beat/ /produk/paket-clean-beat/ 301
 /produk-dan-solusi/ /produk/ 301
 /semua-produk/ /produk/ 301
-/insektisida-sagri/ /produk/#insektisida 301
-/fungisida-sagri/ /produk/#fungisida 301
-/herbisida-sagri/ /produk/#herbisida 301
+/insektisida-sagri/ /produk/kategori/insektisida/ 301
+/fungisida-sagri/ /produk/kategori/fungisida/ 301
+/herbisida-sagri/ /produk/kategori/herbisida/ 301
 /solusi-padi-revisi/ /solusi/padi/ 301
 /solusi-padi/ /solusi/padi/ 301
 /solusi-jagung-sagri/ /solusi/jagung/ 301
