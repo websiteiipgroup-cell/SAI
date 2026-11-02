@@ -5,6 +5,7 @@ import ProdukCard from '../../components/ProdukCard.astro';
 import site from '../../data/site.json';
 import { slugify } from '../../lib/md';
 const produk = (await getCollection('produk')).sort((a, b) => a.data.urutan - b.data.urutan);
+const BATAS = 8; // per jenis on this overview page; the rest live on /produk/kategori/<jenis>/
 const jenis = site.jenis.map((j) => ({ ...j, list: produk.filter((p) => p.data.jenis === j.nama) })).filter((j) => j.list.length);
 ---
 <Base title="Produk" description={site.produk_pengantar}>
@@ -22,8 +23,14 @@ const jenis = site.jenis.map((j) => ({ ...j, list: produk.filter((p) => p.data.j
     </nav>
     {jenis.map((j) => (
       <div class="kat-blok" id={slugify(j.nama)}>
-        <div class="section-head section-head--kecil"><div><h2>{j.judul}</h2><p class="lead">{j.deskripsi}</p></div></div>
-        <div class="pgrid">{j.list.map((p) => <ProdukCard p={p} />)}</div>
+        <div class="section-head section-head--kecil">
+          <div><h2>{j.judul}</h2><p class="lead">{j.deskripsi}</p></div>
+          {j.list.length > BATAS && <a class="link-panah" href={`/produk/kategori/${slugify(j.nama)}/`}>Lihat semua {j.list.length}</a>}
+        </div>
+        <div class="pgrid">{j.list.slice(0, BATAS).map((p) => <ProdukCard p={p} />)}</div>
+        {j.list.length > BATAS && (
+          <p class="lihat-semua"><a class="btn btn--garis" href={`/produk/kategori/${slugify(j.nama)}/`}>Lihat semua {j.list.length} {j.judul.toLowerCase()}</a></p>
+        )}
       </div>
     ))}
     <p class="catatan-grup">{site.grup_keterangan}</p>

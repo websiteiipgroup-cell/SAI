@@ -25,7 +25,7 @@ const jenisPendek = d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis;
 ---
 <Base title={d.nama} description={d.ringkasan || `${d.nama}, ${d.sifat.toLowerCase()} dari SAGRI.`} image={d.gambar || undefined}>
   <section class="produk-top"><div class="wrap">
-    <p class="breadcrumb"><a href="/produk/">Produk</a> / <a href={`/produk/#${slugify(d.jenis)}`}>{jenisInfo?.judul ?? d.jenis}</a></p>
+    <p class="breadcrumb"><a href="/produk/">Produk</a> / <a href={`/produk/kategori/${slugify(d.jenis)}/`}>{jenisInfo?.judul ?? d.jenis}</a></p>
     <div class="produk-top__grid">
       <div class="produk-top__foto">
         <Foto src={d.gambar} alt={`Kemasan ${d.nama}`} label="Foto kemasan belum diunggah" eager />

@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import ArtikelCard from '../components/ArtikelCard.astro';
 import InstagramPost from '../components/InstagramPost.astro';
 import InstagramAjak from '../components/InstagramAjak.astro';
+import InstagramFeed from '../components/InstagramFeed.astro';
 import site from '../data/site.json';
 import { igHandle } from '../lib/md';
 const artikel = (await getCollection('artikel', (a) => !a.data.draft))
@@ -26,11 +27,15 @@ const jumlah = (k: string) => artikel.filter((a) => a.data.kategori === k).lengt
     <section class="section" id="instagram"><div class="wrap">
       <div class="section-head">
         <div><h2>{site.instagram_judul} <a class="ig-handle" href={site.instagram} target="_blank" rel="noopener">{handle}</a></h2></div>
-        {posts.length > 0 && <a class="btn btn--ig" href={site.instagram} target="_blank" rel="noopener">Ikuti {handle}</a>}
+        {(site.behold_feed_id || posts.length > 0) && <a class="btn btn--ig" href={site.instagram} target="_blank" rel="noopener">Ikuti {handle}</a>}
       </div>
-      {posts.length > 0
-        ? <div class="iggrid">{posts.map((u) => <InstagramPost url={u} />)}</div>
-        : <InstagramAjak />}
+      {site.behold_feed_id
+        ? <InstagramFeed feedId={site.behold_feed_id} jumlah={site.instagram_jumlah}>
+            {posts.length > 0 ? <div class="iggrid">{posts.map((u) => <InstagramPost url={u} />)}</div> : <InstagramAjak />}
+          </InstagramFeed>
+        : posts.length > 0
+          ? <div class="iggrid">{posts.map((u) => <InstagramPost url={u} />)}</div>
+          : <InstagramAjak />}
     </div></section>
   )}
 

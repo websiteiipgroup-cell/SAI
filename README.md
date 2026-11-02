@@ -35,8 +35,20 @@ Album foto artikel: di form artikel, isi "Album foto (geser kiri-kanan)" dengan 
 artikel menggantikan foto sampul; di HP digeser dengan jari, di komputer pakai tombol panah. Foto sampul tetap dipakai di
 daftar artikel.
 
-Postingan Instagram tidak masuk otomatis: menampilkan feed yang update sendiri butuh token API Meta dari akun bisnis
-Instagram SAGRI. Kalau nanti mau otomatis, area Instagram bisa diganti tanpa mengubah bagian lain.
+Feed Instagram otomatis lewat Behold (behold.so):
+1. Pastikan akun Instagram @sagri_id bertipe Bisnis atau Kreator (Instagram → Pengaturan → Jenis akun).
+2. Daftar di behold.so, hubungkan @sagri_id, buat feed.
+3. Di feed, salin JSON feed URL (`https://feeds.behold.so/XXXX`), ambil bagian `XXXX`.
+4. Admin website → Pengaturan → Behold feed ID, tempel `XXXX`, Publish.
+5. Opsional: di Behold, isi Domain whitelist dengan `satyaagroindonesia.com` dan `www.satyaagroindonesia.com`.
+
+Postingan diambil langsung oleh browser pengunjung, jadi postingan baru muncul tanpa perlu deploy ulang. Setiap kali
+halaman Kabar dibuka dihitung satu view Behold. Paket gratis: 6 postingan, update sekali sehari, 1.200 view per bulan;
+kalau kuota habis, feed berhenti sampai bulan berikutnya dan halaman otomatis menampilkan cadangan (postingan manual atau
+tombol Ikuti). Paket Starter USD 10/bulan: 15.000 view, update tiap jam. Feed hanya dipasang di halaman Kabar supaya
+kuota hemat.
+
+Kalau Behold feed ID kosong, area Instagram memakai daftar link postingan manual di Pengaturan.
 
 Jenis blok halaman: Hero pilih tanaman, Judul halaman, Produk andalan (otomatis dari produk bertanda Andalan),
 Jenis produk (otomatis), Testimoni petani, Artikel terbaru (otomatis), Teks, Teks dengan foto, Galeri, Ajakan dengan
@@ -49,7 +61,7 @@ Nama halaman `beranda`, `produk`, `solusi`, `artikel`, `kabar`, `cerita-sagri`, 
 
 ## Online-kan (Cloudflare Pages)
 
-1. Upload folder ini ke repo GitHub baru, yaitu `websiteiipgroup-cell/website-sai`
+1. Upload folder ini ke repo GitHub baru, yaitu `websiteiipgroup-cell/SAI`
    (kalau namanya beda, ganti `repo` di `public/admin/config.yml`).
 2. Cloudflare dashboard → Workers & Pages → Create → Pages → hubungkan repo.
    Build command: `npm run build`, output: `dist`.

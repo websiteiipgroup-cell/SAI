@@ -1,0 +1,61 @@
+---
+// Live Instagram grid from a Behold JSON feed (https://feeds.behold.so/<id>), fetched in the browser
+// so new posts appear without rebuilding the site. If the feed can't load, the fallback slot stays visible.
+import site from '../data/site.json';
+const { feedId, jumlah = 6 } = Astro.props;
+---
+<div class="igfeed" data-ig-feed={`https://feeds.behold.so/${feedId}`} data-jumlah={jumlah} data-profil={site.instagram}>
+  <div class="iggrid-tile" aria-busy="true">
+    {Array.from({ length: Number(jumlah) }).map(() => <span class="igtile igtile--muat" aria-hidden="true"></span>)}
+  </div>
+  <div class="igfeed__cadangan" hidden><slot /></div>
+</div>
+
+<script>
+  type Size = { mediaUrl: string };
+  type Post = { permalink: string; mediaType: string; isReel?: boolean; prunedCaption?: string; caption?: string; altText?: string;
+    timestamp: string; sizes?: { medium?: Size; small?: Size }; thumbnailUrl?: string; mediaUrl?: string; colorPalette?: { dominant?: string } };
+
+  document.querySelectorAll<HTMLElement>('[data-ig-feed]').forEach(async (box) => {
+    const grid = box.querySelector<HTMLElement>('.iggrid-tile')!;
+    const fallback = box.querySelector<HTMLElement>('.igfeed__cadangan')!;
+    const fail = () => { grid.remove(); fallback.hidden = false; };
+    try {
+      const res = await fetch(box.dataset.igFeed!);
+      if (!res.ok) throw new Error(String(res.status));
+      const data = await res.json();
+      const posts: Post[] = (data.posts || []).slice(0, Number(box.dataset.jumlah) || 6);
+      if (!posts.length) return fail();
+      const fmt = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      grid.innerHTML = '';
+      grid.removeAttribute('aria-busy');
+      for (const p of posts) {
+        const a = document.createElement('a');
+        a.className = 'igtile';
+        a.href = p.permalink; a.target = '_blank'; a.rel = 'noopener';
+        const text = (p.prunedCaption || p.caption || '').trim();
+        const img = document.createElement('img');
+        img.src = p.sizes?.medium?.mediaUrl || p.sizes?.small?.mediaUrl || p.thumbnailUrl || p.mediaUrl || '';
+        img.alt = p.altText || text.slice(0, 120) || 'Postingan Instagram SAGRI';
+        img.loading = 'lazy'; img.decoding = 'async';
+        img.addEventListener('error', () => img.remove());
+        if (p.colorPalette?.dominant) a.style.background = `rgb(${p.colorPalette.dominant})`;
+        a.appendChild(img);
+        if (p.mediaType === 'VIDEO' || p.mediaType === 'CAROUSEL_ALBUM') {
+          const tag = document.createElement('span');
+          tag.className = 'igtile__jenis';
+          tag.textContent = p.mediaType === 'VIDEO' ? (p.isReel ? 'Reel' : 'Video') : 'Album';
+          a.appendChild(tag);
+        }
+        const cap = document.createElement('span');
+        cap.className = 'igtile__teks';
+        const d = new Date(p.timestamp);
+        cap.innerHTML = `<time></time><span></span>`;
+        cap.querySelector('time')!.textContent = isNaN(d.valueOf()) ? '' : fmt.format(d);
+        cap.querySelector('span')!.textContent = text;
+        a.appendChild(cap);
+        grid.appendChild(a);
+      }
+    } catch { fail(); }
+  });
+</script>

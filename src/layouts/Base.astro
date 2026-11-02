@@ -67,7 +67,7 @@ const schema = {
       <nav aria-label="Produk">
         <p class="footer__judul">Produk</p>
         <ul>
-          {site.jenis.map((j) => <li><a href={`/produk/#${slugify(j.nama)}`}>{j.judul}</a></li>)}
+          {site.jenis.map((j) => <li><a href={`/produk/kategori/${slugify(j.nama)}/`}>{j.judul}</a></li>)}
         </ul>
       </nav>
       <nav aria-label="Solusi tanaman">

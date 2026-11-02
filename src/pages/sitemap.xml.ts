@@ -8,7 +8,7 @@ export const GET: APIRoute = async ({ site: base }) => {
   const pages = (await getCollection('halaman')).filter((p) => !RESERVED.includes(p.id));
   const produk = await getCollection('produk');
   const artikel = await getCollection('artikel', (p) => !p.data.draft);
-  const paths = ['/', ...pages.map((p) => `/${p.id}/`), '/produk/', ...produk.map((p) => `/produk/${p.id}/`),
+  const paths = ['/', ...pages.map((p) => `/${p.id}/`), '/produk/', ...site.jenis.filter((j) => produk.some((p) => p.data.jenis === j.nama)).map((j) => `/produk/kategori/${j.nama.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/`), ...produk.map((p) => `/produk/${p.id}/`),
     ...site.komoditas.map((k) => `/solusi/${k.slug}/`), '/kabar/', '/cerita-sagri/', '/pengetahuan/',
     ...artikel.map((p) => `/artikel/${p.id}/`)];
   const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${

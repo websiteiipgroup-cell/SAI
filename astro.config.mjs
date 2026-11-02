@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://satyaagroindonesia.com',
+  site: 'https://www.satyaagroindonesia.com',
   trailingSlash: 'ignore',
 });

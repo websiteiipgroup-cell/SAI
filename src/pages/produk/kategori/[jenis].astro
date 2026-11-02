@@ -1,0 +1,64 @@
+---
+// One page per product type (paket, insektisida, ...), with a crop filter.
+// Filtering is done in the browser; without JS every product stays visible.
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import ProdukCard from '../../../components/ProdukCard.astro';
+import site from '../../../data/site.json';
+import { slugify } from '../../../lib/md';
+
+export async function getStaticPaths() {
+  const produk = await getCollection('produk');
+  return site.jenis
+    .map((j) => ({ j, list: produk.filter((p) => p.data.jenis === j.nama).sort((a, b) => a.data.urutan - b.data.urutan) }))
+    .filter((x) => x.list.length)
+    .map(({ j, list }) => ({ params: { jenis: slugify(j.nama) }, props: { j, list } }));
+}
+const { j, list } = Astro.props;
+const tanaman = site.komoditas.filter((k) => list.some((p) => p.data.tanaman.includes(k.nama)));
+---
+<Base title={j.judul} description={j.deskripsi}>
+  <section class="page-head"><div class="wrap">
+    <p class="breadcrumb"><a href="/produk/">Produk</a></p>
+    <h1>{j.judul} SAGRI</h1>
+    <p>{j.deskripsi}</p>
+  </div></section>
+  <section class="section"><div class="wrap">
+    {tanaman.length > 1 && (
+      <div class="chips chips--filter" role="group" aria-label="Saring menurut tanaman" data-filter>
+        <span class="chips__label">Tanaman:</span>
+        <button type="button" class="chip" data-tanaman="" aria-pressed="true">Semua <span>{list.length}</span></button>
+        {tanaman.map((k) => (
+          <button type="button" class="chip" data-tanaman={k.nama} aria-pressed="false">
+            {k.nama} <span>{list.filter((p) => p.data.tanaman.includes(k.nama)).length}</span>
+          </button>
+        ))}
+      </div>
+    )}
+    <p class="filter-info" aria-live="polite" data-info></p>
+    <div class="pgrid" data-grid>
+      {list.map((p) => <div class="pgrid__item" data-tanaman={p.data.tanaman.join('|')}><ProdukCard p={p} /></div>)}
+    </div>
+  </div></section>
+</Base>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-filter]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-grid] > [data-tanaman]')];
+  const info = document.querySelector<HTMLElement>('[data-info]');
+  const apply = (t: string) => {
+    let n = 0;
+    items.forEach((el) => { const show = !t || el.dataset.tanaman!.split('|').includes(t); el.hidden = !show; if (show) n++; });
+    bar?.querySelectorAll<HTMLButtonElement>('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tanaman === t)));
+    if (info) info.textContent = t ? `${n} produk untuk tanaman ${t.toLowerCase()}` : '';
+    const url = new URL(location.href);
+    if (t) url.searchParams.set('tanaman', t); else url.searchParams.delete('tanaman');
+    history.replaceState(null, '', url);
+  };
+  bar?.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('button[data-tanaman]');
+    if (b) apply(b.dataset.tanaman!);
+  });
+  const awal = new URLSearchParams(location.search).get('tanaman');
+  if (awal && bar?.querySelector(`button[data-tanaman="${CSS.escape(awal)}"]`)) apply(awal);
+</script>
