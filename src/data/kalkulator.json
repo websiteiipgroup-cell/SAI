@@ -1,4 +1,5 @@
 {
+  "aktif": true,
   "judul": "Hitung dosis",
   "pengantar": "Ubah anjuran dosis produk SAGRI menjadi takaran per tangki, sesuai luas lahan, alat semprot, dan takaran yang Anda punya.",
   "catatan": "Hasil hitungan adalah panduan. Selalu baca dan ikuti petunjuk pada label kemasan, dan tanyakan petugas SAGRI bila ragu.",
