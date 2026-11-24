@@ -439,3 +439,6 @@ h1, h2, h3, p, li, dd, figcaption, blockquote { overflow-wrap: break-word; }
   body:has(.kd__bar) .wa-float { display: none; }
   .kd { padding-bottom: 96px; }
 }
+.chip--hitung { background: var(--matahari); border-color: var(--matahari); color: var(--tinta); margin-left: 8px; }
+.chip--hitung:hover { background: #e6b500; border-color: #e6b500; color: var(--tinta); }
+@media (max-width: 560px) { .chip--hitung { margin-left: 0; } }

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProdukCard from '../../components/ProdukCard.astro';
+import HitungDosisChip from '../../components/HitungDosisChip.astro';
 import site from '../../data/site.json';
 import { slugify } from '../../lib/md';
 const produk = (await getCollection('produk')).sort((a, b) => a.data.urutan - b.data.urutan);
@@ -15,6 +16,7 @@ const jenis = site.jenis.map((j) => ({ ...j, list: produk.filter((p) => p.data.j
     <nav class="chips" aria-label="Pilih tanaman">
       <span class="chips__label">Tanaman:</span>
       {site.komoditas.map((k) => <a class="chip" href={`/solusi/${k.slug}/`}>{k.nama}</a>)}
+      <HitungDosisChip />
     </nav>
   </div></section>
   <section class="section"><div class="wrap">

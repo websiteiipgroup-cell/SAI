@@ -22,7 +22,7 @@ const terkait = semua
   .sort((a, b) => (a.data.jenis === d.jenis ? 0 : 1) - (b.data.jenis === d.jenis ? 0 : 1) || a.data.urutan - b.data.urutan)
   .slice(0, 4);
 const label = d.jenis === 'Fungisida' ? 'Penyakit sasaran' : d.jenis === 'Herbisida' ? 'Gulma sasaran' : 'Hama sasaran';
-const adaDosis = kalk.produk.some((x) => x.produk === p.id && +x.min > 0);
+const adaDosis = (kalk as any).aktif === true && kalk.produk.some((x) => x.produk === p.id && +x.min > 0);
 const jenisPendek = d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis;
 ---
 <Base title={d.nama} description={d.ringkasan || `${d.nama}, ${d.sifat.toLowerCase()} dari SAGRI.`} image={d.gambar || undefined}>

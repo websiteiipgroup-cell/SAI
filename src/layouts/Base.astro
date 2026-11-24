@@ -1,12 +1,14 @@
 ---
 import '../styles/global.css';
 import site from '../data/site.json';
+import kalk from '../data/kalkulator.json';
 import { tel, wa, slugify } from '../lib/md';
 
 interface Props { title?: string; description?: string; image?: string; }
 const { title, description = site.deskripsi, image = site.og_image } = Astro.props;
 const fullTitle = title ? `${title} | ${site.nama_merek}` : `${site.nama_merek}, ${site.tagline} | ${site.nama_perusahaan}`;
 const path = Astro.url.pathname;
+const menu = site.menu.filter((n) => (kalk as any).aktif === true || !n.link.startsWith('/hitung-dosis'));
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const schema = {
   '@context': 'https://schema.org', '@type': 'Organization',
@@ -49,7 +51,7 @@ const schema = {
       </button>
       <nav id="site-nav" class="nav" aria-label="Menu utama">
         <ul>
-          {site.menu.map((n) => <li><a href={n.link} aria-current={isCurrent(n.link) ? 'page' : undefined}>{n.label}</a></li>)}
+          {menu.map((n) => <li><a href={n.link} aria-current={isCurrent(n.link) ? 'page' : undefined}>{n.label}</a></li>)}
         </ul>
         <a class="btn btn--wa nav__wa" href={wa('Halo SAGRI, saya ingin bertanya.')}>Tanya via WhatsApp</a>
       </nav>

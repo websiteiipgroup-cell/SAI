@@ -7,6 +7,8 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import k from '../data/kalkulator.json';
 
+// Hidden until switched on in the CMS (Pengaturan → Kalkulator dosis → Tampilkan). A missing field counts as off.
+if ((k as any).aktif !== true) return Astro.redirect('/produk/');
 const semua = await getCollection('produk');
 const produk = k.produk
   .map((d) => {

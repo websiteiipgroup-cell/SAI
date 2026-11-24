@@ -230,6 +230,7 @@ collections:
         file: src/data/kalkulator.json
         description: "Data untuk halaman Hitung Dosis. Produk hanya muncul di kalkulator kalau dosisnya diisi di sini."
         fields:
+          - { label: Tampilkan halaman Hitung Dosis, name: aktif, widget: boolean, default: false, required: false, hint: "Matikan selama data belum lengkap: menu, tombol di halaman produk, dan halamannya disembunyikan (link dialihkan ke Produk)." }
           - { label: Judul halaman, name: judul, widget: string }
           - { label: Pengantar, name: pengantar, widget: text }
           - { label: Catatan di bawah hasil, name: catatan, widget: text }
