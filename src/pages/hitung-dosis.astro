@@ -1,0 +1,279 @@
+---
+// Field dose calculator: turns the R&D dose of a SAGRI product into a per-tank amount for the farmer's
+// own land, sprayer and measuring tool. Product doses, sprayers and local area units come from
+// src/data/kalkulator.json (CMS: Pengaturan → Kalkulator dosis). Calculation logic follows the
+// standalone "Kalkulator Dosis Lapangan" tool.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import k from '../data/kalkulator.json';
+
+const semua = await getCollection('produk');
+const produk = k.produk
+  .map((d) => {
+    const p = semua.find((x) => x.id === d.produk);
+    if (!p || !(+d.min > 0)) return null;
+    return {
+      id: p.id, nama: p.data.nama, bentuk: d.bentuk === 'bubuk' ? 'bubuk' : 'cair', mode: d.mode === 'ha' ? 'ha' : 'konsen',
+      min: +d.min, max: Math.max(+d.min, +d.max || 0), std: +d.air_standar > 0 ? +d.air_standar : +k.air_standar || 400,
+      kemasan: +d.kemasan || 0, tutup: +d.tutup || 0, urutan: p.data.urutan,
+    };
+  })
+  .filter(Boolean)
+  .sort((a: any, b: any) => a.urutan - b.urutan);
+const data = { produk, alat: k.alat, satuan: k.satuan.map((s) => [s.nama, +s.m2 || 1]), std: +k.air_standar || 400 };
+---
+<Base title={k.judul} description={k.pengantar}>
+  <section class="page-head"><div class="wrap">
+    <h1>{k.judul}</h1>
+    <p>{k.pengantar}</p>
+  </div></section>
+
+  <div class="wrap kd">
+    <div class="kd__input">
+      <section class="kd__sec">
+        <h2><b>1</b>Produk</h2>
+        <label for="prod" class="sr-only">Produk</label>
+        <select id="prod"></select>
+        <div id="manWrap" hidden>
+          <label for="mNama">Nama produk (opsional)</label><input id="mNama" placeholder="mis. Herbisida X">
+          <div class="kd__row">
+            <div><label for="mBentuk">Bentuk</label><select id="mBentuk"><option value="cair">Cair</option><option value="bubuk">Bubuk</option></select></div>
+            <div><label for="mMode">Dosis ditulis</label><select id="mMode"><option value="konsen">per liter air</option><option value="ha">per hektar</option></select></div>
+          </div>
+          <div class="kd__row">
+            <div><label for="mDosis" id="mDosisL">Dosis</label><input id="mDosis" type="number" inputmode="decimal" min="0" step="any" value="2"></div>
+            <div><label for="mStd">Air standar (L/ha)</label><input id="mStd" type="number" inputmode="decimal" min="0" step="any"></div>
+          </div>
+          <div class="kd__row">
+            <div><label for="mKem" id="mKemL">Isi kemasan</label><input id="mKem" type="number" inputmode="decimal" min="0" step="any" value="0"></div>
+            <div><label for="mTutup">1 tutup botol (ml)</label><input id="mTutup" type="number" inputmode="decimal" min="0" step="any" value="10"></div>
+          </div>
+        </div>
+        <div id="dosisPick"></div>
+        <div class="kd__info" id="prodInfo"></div>
+      </section>
+
+      <section class="kd__sec">
+        <h2><b>2</b>Luas lahan</h2>
+        <div class="kd__row">
+          <div><label for="luas">Luas</label><input id="luas" type="number" inputmode="decimal" min="0" step="any" value="1"></div>
+          <div><label for="luasU">Satuan</label><select id="luasU"></select></div>
+        </div>
+        <p class="kd__note" id="luasNote"></p>
+      </section>
+
+      <section class="kd__sec">
+        <h2><b>3</b>Alat semprot</h2>
+        <div class="chips chips--filter" id="tankChips" role="group" aria-label="Alat semprot"></div>
+        <div id="tankCustomWrap" hidden><label for="tankCustom">Isi tangki (liter)</label><input id="tankCustom" type="number" inputmode="decimal" min="0" step="any" value="16"></div>
+      </section>
+
+      <section class="kd__sec">
+        <h2><b>4</b>Kebiasaan semprot</h2>
+        <div class="chips chips--filter" id="volChips" role="group" aria-label="Kebiasaan semprot">
+          <button type="button" class="chip" data-v="alat" aria-pressed="true">Ikut alat</button>
+          <button type="button" class="chip" data-v="std" aria-pressed="false">Ikut standar anjuran</button>
+          <button type="button" class="chip" data-v="kal" aria-pressed="false">Kebiasaan petani</button>
+          <button type="button" class="chip" data-v="man" aria-pressed="false">Isi L/ha sendiri</button>
+        </div>
+        <div id="manVolWrap" hidden>
+          <label for="manVol">Volume semprot (liter air per hektar)</label>
+          <input id="manVol" type="number" inputmode="decimal" min="0" step="any" value="400">
+        </div>
+        <div id="kalWrap" hidden>
+          <label for="kalLuas">1 tangki biasanya habis untuk lahan seluas</label>
+          <div class="kd__row">
+            <input id="kalLuas" type="number" inputmode="decimal" min="0" step="any" value="25">
+            <select id="kalU" aria-label="Satuan luas per tangki"></select>
+          </div>
+          <p class="kd__note">Ini yang paling sering bikin dosis meleset: tiap petani jalannya beda cepat dan nozzle-nya beda, jadi air per luas lahan juga beda.</p>
+        </div>
+        <div class="kd__info" id="volInfo"></div>
+      </section>
+
+      <section class="kd__sec">
+        <h2><b>5</b>Takaran yang dipakai</h2>
+        <div class="chips chips--filter" id="takChips" role="group" aria-label="Takaran"></div>
+        <p class="kd__note" id="takNote"></p>
+      </section>
+    </div>
+
+    <aside class="kd__hasil" id="hasil">
+      <div class="kd__res" aria-live="polite">
+        <p class="kd__res-label">Campur ke setiap <span id="rTank"></span>:</p>
+        <p class="kd__big" id="rPer">–</p>
+        <div id="rTak"></div>
+        <div class="kd__grid">
+          <div><span>Jumlah tangki</span><b id="rTanks">–</b></div>
+          <div><span>Total produk</span><b id="rTotal">–</b></div>
+          <div><span>Total air</span><b id="rWater">–</b></div>
+          <div><span>Perlu beli</span><b id="rBuy">–</b></div>
+        </div>
+        <ol class="kd__steps" id="rSteps"></ol>
+        <div id="rWarn"></div>
+        <button type="button" class="btn btn--wa kd__copy" id="copy">Salin hasil untuk WhatsApp</button>
+        <p class="kd__copymsg" id="copyMsg" role="status"></p>
+      </div>
+      <p class="kd__catatan">{k.catatan}</p>
+    </aside>
+  </div>
+
+  <a class="kd__bar" href="#hasil" id="kdBar"><span>Per tangki</span> <b id="rBar">–</b> <span class="kd__bar-link">Lihat hasil</span></a>
+
+  <script type="application/json" id="kd-data" set:html={JSON.stringify(data)} />
+</Base>
+
+<script>
+  type Prod = { id?: string; nama: string; bentuk: 'cair' | 'bubuk'; mode: 'konsen' | 'ha'; min: number; max: number; std: number; kemasan: number; tutup: number };
+  const D = JSON.parse(document.getElementById('kd-data')!.textContent || '{}');
+  const P: Prod[] = D.produk || [];
+  const U: [string, number][] = D.satuan?.length ? D.satuan : [['m²', 1], ['hektar', 10000]];
+  const A: { nama: string; tangki: number; vol: number }[] = D.alat || [];
+  const STD = +D.std || 400;
+  const TAK: Record<string, [string, number][]> = {
+    cair: [['tutup botol', 0], ['sendok makan', 15], ['sendok teh', 5], ['gelas ukur (ml)', 1]],
+    bubuk: [['sendok makan', 10], ['sendok teh', 3], ['timbangan (g)', 1]],
+  };
+  const $ = <T extends HTMLElement = HTMLInputElement>(id: string) => document.getElementById(id) as unknown as T;
+  const esc = (s: unknown) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+  const nf = (x: number, d = 1) => (isFinite(x) ? x.toLocaleString('id-ID', { maximumFractionDigits: d }) : '–');
+  const frac = (x: number) => { const q = Math.round(x * 4) / 4, w = Math.floor(q), f = ['', '¼', '½', '¾'][Math.round((q - w) * 4)]; return q === 0 ? '<¼' : (w ? w : '') + f; };
+  const unitM2 = (i: string | number) => +U[+i]?.[1] || 1;
+
+  const st: { prod: number | 'm'; lvl: 'min' | 'max'; tank: number | 'c'; vol: string; tak: number; text: string } =
+    { prod: P.length ? 0 : 'm', lvl: 'min', tank: A.length ? 0 : 'c', vol: 'alat', tak: 0, text: '' };
+  const M: Prod = { nama: '', bentuk: 'cair', mode: 'konsen', min: 2, max: 2, std: STD, kemasan: 0, tutup: 10 };
+  const cur = (): Prod => (st.prod === 'm' ? { ...M, nama: M.nama || 'Dosis manual' } : P[st.prod]);
+  const MF: Record<string, keyof Prod> = { mNama: 'nama', mBentuk: 'bentuk', mMode: 'mode', mDosis: 'min', mStd: 'std', mKem: 'kemasan', mTutup: 'tutup' };
+  // Units for the chosen product's tools: a cap measure only when its size is known.
+  const takList = (p: Prod) => TAK[p.bentuk].filter(([n, s]) => !(n === 'tutup botol' && !(+p.tutup > 0)) || s > 0);
+
+  function manUI() {
+    $('manWrap').hidden = st.prod !== 'm';
+    for (const id in MF) if (document.activeElement !== $(id)) $(id).value = String(M[MF[id]]);
+    const c = M.bentuk === 'cair';
+    $('mDosisL').textContent = 'Dosis (' + (M.mode === 'konsen' ? (c ? 'ml/L' : 'g/L') : (c ? 'L/ha' : 'kg/ha')) + ')';
+    $('mKemL').textContent = 'Isi kemasan (' + (c ? 'ml' : 'g') + ')';
+    $('mTutup').parentElement!.hidden = !c;
+  }
+  function fillSelects() {
+    $<HTMLSelectElement>('prod').innerHTML =
+      (P.length ? `<optgroup label="Produk SAGRI">${P.map((p, i) => `<option value="${i}">${esc(p.nama)}</option>`).join('')}</optgroup>` : '') +
+      `<option value="m">Produk lain (isi dosis sendiri)</option>`;
+    $<HTMLSelectElement>('prod').value = String(st.prod);
+    const uo = U.map((u, i) => `<option value="${i}">${esc(u[0])}</option>`).join('');
+    const a = $<HTMLSelectElement>('luasU').value, b = $<HTMLSelectElement>('kalU').value;
+    $('luasU').innerHTML = uo; $('kalU').innerHTML = uo;
+    const ha = U.findIndex((u) => u[0] === 'hektar');
+    $<HTMLSelectElement>('luasU').value = a && +a < U.length ? a : String(ha >= 0 ? ha : 0);
+    $<HTMLSelectElement>('kalU').value = b && +b < U.length ? b : '0';
+    $('tankCustomWrap').hidden = st.tank !== 'c';
+    $('tankChips').innerHTML = A.map((t, i) => `<button type="button" class="chip" data-t="${i}" aria-pressed="${st.tank === i}">${esc(t.nama)}${+t.vol > 0 ? ` <span>${nf(+t.vol, 0)} L/ha</span>` : ''}</button>`).join('') +
+      `<button type="button" class="chip" data-t="c" aria-pressed="${st.tank === 'c'}">Lainnya</button>`;
+  }
+  function prodUI() {
+    manUI();
+    const p = cur(); if (!p) return;
+    const u = p.mode === 'konsen' ? (p.bentuk === 'cair' ? 'ml/L' : 'g/L') : (p.bentuk === 'cair' ? 'L/ha' : 'kg/ha');
+    const range = +p.max > +p.min;
+    $('dosisPick').innerHTML = range
+      ? `<p class="kd__label">Dosis yang dipakai</p><div class="chips chips--filter">${(['min', 'max'] as const).map((l) => `<button type="button" class="chip" data-l="${l}" aria-pressed="${st.lvl === l}">${l === 'min' ? 'Rendah' : 'Tinggi'} <span>${nf(+p[l], 2)} ${u}</span></button>`).join('')}</div>`
+      : '';
+    $('prodInfo').innerHTML = `Anjuran: <b>${nf(+p.min, 2)}${range ? '–' + nf(+p.max, 2) : ''} ${u}</b>, air standar ${nf(+p.std, 0)} L/ha` +
+      (+p.kemasan > 0 ? `, kemasan ${nf(+p.kemasan, 0)} ${p.bentuk === 'cair' ? 'ml' : 'g'}` : '') +
+      (p.id ? `. <a href="/produk/${p.id}/">Lihat cara pakai lengkap</a>` : '');
+    const t = takList(p); if (st.tak >= t.length) st.tak = 0;
+    $('takChips').innerHTML = t.map((x, i) => `<button type="button" class="chip" data-k="${i}" aria-pressed="${st.tak === i}">${esc(x[0])}</button>`).join('');
+    $('takNote').textContent = p.bentuk === 'cair'
+      ? (+p.tutup > 0 ? `1 tutup botol produk ini ≈ ${nf(+p.tutup)} ml. ` : '') + 'Sendok makan ≈ 15 ml, sendok teh ≈ 5 ml.'
+      : 'Berat bubuk per sendok tergantung produk: sendok makan ≈ 10 g, sendok teh ≈ 3 g (perkiraan). Paling tepat pakai timbangan.';
+  }
+  function calc() {
+    const p = cur(); if (!p) return;
+    const cair = p.bentuk === 'cair', un = cair ? 'ml' : 'g';
+    const area = Math.max(0, +$('luas').value || 0) * unitM2($<HTMLSelectElement>('luasU').value), ha = area / 10000;
+    const al = st.tank === 'c' ? null : A[st.tank];
+    const tankL = al ? +al.tangki : Math.max(0, +$('tankCustom').value || 0);
+    const alatNm = al ? al.nama : 'tangki ' + nf(tankL) + ' L';
+    const d = +p[+p.max > +p.min ? st.lvl : 'min'];
+    let vol = +p.std;
+    const alatVol = st.vol === 'alat' && !!al && +al.vol > 0;
+    if (alatVol) vol = +al!.vol;
+    const kalA = (+$('kalLuas').value || 0) * unitM2($<HTMLSelectElement>('kalU').value);
+    if (st.vol === 'kal' && kalA > 0 && tankL > 0) vol = tankL / (kalA / 10000);
+    if (st.vol === 'man' && +$('manVol').value > 0) vol = +$('manVol').value;
+    const water = vol * ha; let c: number, total: number, stdC: number;
+    if (p.mode === 'konsen') { c = d; total = c * water; stdC = d; }
+    else { const perHa = d * 1000; total = perHa * ha; c = vol > 0 ? perHa / vol : 0; stdC = perHa / +p.std; }
+    const per = c * tankL, tanks = tankL > 0 ? water / tankL : 0;
+    const full = Math.floor(tanks + 1e-9), rem = water - full * tankL;
+    const tk = takList(p)[st.tak] || TAK[p.bentuk][0], tkSize = tk[1] || (cair ? +p.tutup : 0);
+    $('rTank').textContent = al ? (/\d\s*L\b/i.test(al.nama) ? al.nama : `${al.nama} (${nf(tankL)} L)`) : 'tangki ' + nf(tankL) + ' L';
+    $('rPer').innerHTML = `${nf(per, per < 10 ? 1 : 0)}<span> ${un}</span>`;
+    $('rBar').textContent = `${nf(per, per < 10 ? 1 : 0)} ${un}` + (tkSize > 1 ? ` (≈ ${frac(per / tkSize)} ${tk[0]})` : '');
+    $('rTak').innerHTML = tkSize > 1 ? `<span class="kd__tak">≈ ${frac(per / tkSize)} ${esc(tk[0])}</span>` : '';
+    $('rTanks').textContent = tanks > 0 ? nf(tanks) + ' tangki' : '–';
+    $('rTotal').textContent = nf(total, 0) + ' ' + un;
+    $('rWater').textContent = nf(water, 0) + ' L';
+    const buy = +p.kemasan > 0 ? Math.ceil(total / +p.kemasan - 1e-9) : 0;
+    $('rBuy').textContent = buy ? buy + ' × ' + nf(+p.kemasan, 0) + ' ' + un : '–';
+    const steps: string[] = [];
+    if (full > 0) steps.push(`${full}× tangki penuh: ${nf(tankL)} L air + ${nf(per, 1)} ${un}`);
+    if (rem > tankL * 0.02) steps.push(`Tangki terakhir: ${nf(rem)} L air + ${nf(c * rem, 1)} ${un}`);
+    $('rSteps').innerHTML = steps.map((s) => `<li>${esc(s)}</li>`).join('');
+    $('volInfo').innerHTML = st.vol === 'alat'
+      ? (alatVol ? `Ikut alat <b>${esc(al!.nama)}</b>: <b>${nf(vol, 0)} L air/ha</b> (standar anjuran ${nf(+p.std, 0)} L/ha).` : `Alat ini belum punya volume semprot, jadi pakai standar anjuran: <b>${nf(vol, 0)} L air/ha</b>.`)
+      : st.vol !== 'std' ? `${st.vol === 'kal' ? 'Kebiasaan petani' : 'Volume sendiri'}: <b>${nf(vol, 0)} L air/ha</b> (standar anjuran ${nf(+p.std, 0)} L/ha).` : `Pakai standar anjuran: <b>${nf(vol, 0)} L air/ha</b>.`;
+    $('luasNote').textContent = `= ${nf(area, 0)} m² (${nf(ha, 3)} ha)`;
+    const w: string[] = [], ratio = vol / +p.std;
+    if (st.vol !== 'std' && isFinite(ratio)) {
+      if (p.mode === 'ha' && (ratio < 0.67 || ratio > 1.5)) w.push(`Air petani ${ratio > 1 ? 'jauh lebih banyak' : 'jauh lebih sedikit'} dari standar, jadi campuran per tangki ${ratio > 1 ? 'lebih encer' : 'lebih pekat'} (${nf(c, 2)} vs ${nf(stdC, 2)} ${un}/L). Dosis per hektarnya tetap sama.`);
+      if (p.mode === 'konsen' && (ratio < 0.67 || ratio > 1.5)) w.push(`Air petani ${nf(ratio * 100, 0)}% dari standar, jadi total produk per lahan ikut ${ratio > 1 ? 'naik' : 'turun'}. Tanyakan petugas SAGRI apakah untuk produk ini yang dijaga konsentrasi atau dosis per hektar.`);
+      if (ratio < 0.4 || ratio > 2.5) w.push('Angka kebiasaan petani tidak wajar, cek lagi luas per tangki.');
+    }
+    $('rWarn').innerHTML = w.map((x) => `<p class="kd__warn">${esc(x)}</p>`).join('');
+    st.text = `*${p.nama}*\nLahan: ${$('luas').value} ${U[+$<HTMLSelectElement>('luasU').value][0]} (${nf(area, 0)} m²)\nAlat: ${alatNm} (${nf(tankL)} L), volume semprot ${nf(vol, 0)} L/ha\nPer tangki: ${nf(per, 1)} ${un}${tkSize > 1 ? ' (≈ ' + frac(per / tkSize) + ' ' + tk[0] + ')' : ''}\nJumlah: ${nf(tanks)} tangki, air ${nf(water, 0)} L\nTotal produk: ${nf(total, 0)} ${un}${buy ? ' → beli ' + buy + ' × ' + nf(+p.kemasan, 0) + ' ' + un : ''}\n` +
+      steps.map((s) => '- ' + s).join('\n') + `\n\nDihitung di ${location.origin}/hitung-dosis/`;
+  }
+  const all = () => { fillSelects(); prodUI(); calc(); };
+  // Phone: keep a small result bar on screen until the full result card scrolls into view.
+  const bar = $('kdBar'), card = $('hasil');
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => bar.classList.toggle('is-hidden', e.isIntersecting), { threshold: 0.15 }).observe(card);
+
+  document.querySelector('.kd')!.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('button'); if (!b) return;
+    if (b.dataset.t) { st.tank = b.dataset.t === 'c' ? 'c' : +b.dataset.t; fillSelects(); }
+    else if (b.dataset.v) {
+      st.vol = b.dataset.v; $('kalWrap').hidden = st.vol !== 'kal'; $('manVolWrap').hidden = st.vol !== 'man';
+      document.querySelectorAll('#volChips .chip').forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+    }
+    else if (b.dataset.l) { st.lvl = b.dataset.l as 'min' | 'max'; prodUI(); }
+    else if (b.dataset.k) { st.tak = +b.dataset.k; prodUI(); }
+    else if (b.id === 'copy') {
+      navigator.clipboard.writeText(st.text)
+        .then(() => { $('copyMsg').textContent = 'Tersalin, tinggal tempel di WhatsApp.'; })
+        .catch(() => { $('copyMsg').textContent = 'Browser menolak salin otomatis. Salin manual dari kotak hasil.'; });
+      return;
+    }
+    else return;
+    calc();
+  });
+  $('prod').addEventListener('change', (e) => {
+    const v = (e.target as HTMLSelectElement).value; st.prod = v === 'm' ? 'm' : +v; st.lvl = 'min'; prodUI(); calc();
+    const url = new URL(location.href);
+    if (st.prod === 'm') url.searchParams.delete('produk'); else url.searchParams.set('produk', P[st.prod].id!);
+    history.replaceState(null, '', url);
+  });
+  for (const id in MF) $(id).addEventListener('input', (e) => {
+    const f = MF[id], t = e.target as HTMLInputElement;
+    (M as any)[f] = t.tagName === 'SELECT' || f === 'nama' ? t.value : +t.value; M.max = M.min;
+    prodUI(); calc();
+  });
+  ['luas', 'luasU', 'tankCustom', 'kalLuas', 'kalU', 'manVol'].forEach((id) => $(id).addEventListener('input', calc));
+
+  // ?produk=<slug> opens the calculator on that product (linked from product pages).
+  const awal = new URLSearchParams(location.search).get('produk');
+  const i = P.findIndex((p) => p.id === awal);
+  if (i >= 0) st.prod = i;
+  all();
+</script>

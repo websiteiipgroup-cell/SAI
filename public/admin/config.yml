@@ -225,6 +225,45 @@ collections:
   - name: pengaturan
     label: Pengaturan
     files:
+      - name: kalkulator
+        label: Kalkulator dosis
+        file: src/data/kalkulator.json
+        description: "Data untuk halaman Hitung Dosis. Produk hanya muncul di kalkulator kalau dosisnya diisi di sini."
+        fields:
+          - { label: Judul halaman, name: judul, widget: string }
+          - { label: Pengantar, name: pengantar, widget: text }
+          - { label: Catatan di bawah hasil, name: catatan, widget: text }
+          - { label: Air standar umum (L/ha), name: air_standar, widget: number, value_type: float, min: 1, hint: "Dipakai untuk produk yang kolom air standarnya kosong atau 0." }
+          - label: Dosis produk
+            name: produk
+            widget: list
+            summary: "{{fields.produk}}: {{fields.min}}–{{fields.max}}"
+            hint: "Isi dari anjuran R&D. Satu baris per produk."
+            fields:
+              - { label: Produk, name: produk, widget: relation, collection: produk, search_fields: [nama], value_field: "{{slug}}", display_fields: [nama] }
+              - { label: Bentuk, name: bentuk, widget: select, options: [{ label: "Cair (ml)", value: cair }, { label: "Bubuk (g)", value: bubuk }], default: cair }
+              - { label: Dosis ditulis, name: mode, widget: select, options: [{ label: "per liter air (ml/L atau g/L)", value: konsen }, { label: "per hektar (L/ha atau kg/ha)", value: ha }], default: konsen }
+              - { label: Dosis rendah, name: min, widget: number, value_type: float, min: 0 }
+              - { label: Dosis tinggi, name: max, widget: number, value_type: float, min: 0, hint: "Sama dengan dosis rendah kalau tidak ada rentang." }
+              - { label: Air standar produk (L/ha), name: air_standar, widget: number, value_type: float, min: 0, default: 0, hint: "0 = pakai air standar umum." }
+              - { label: Isi kemasan (ml atau g), name: kemasan, widget: number, value_type: float, min: 0, default: 0, hint: "0 = baris Perlu beli tidak dihitung." }
+              - { label: Isi 1 tutup botol (ml), name: tutup, widget: number, value_type: float, min: 0, default: 0, hint: "Khusus produk cair. 0 = pilihan tutup botol tidak ditampilkan." }
+          - label: Alat semprot
+            name: alat
+            widget: list
+            summary: "{{fields.nama}} ({{fields.tangki}} L)"
+            fields:
+              - { label: Nama alat, name: nama, widget: string }
+              - { label: Isi tangki (L), name: tangki, widget: number, value_type: float, min: 0 }
+              - { label: Volume semprot (L/ha), name: vol, widget: number, value_type: float, min: 0, default: 0, hint: "0 kalau belum tahu (ikut air standar produk)." }
+          - label: Satuan luas
+            name: satuan
+            widget: list
+            summary: "{{fields.nama}} = {{fields.m2}} m²"
+            hint: "Patok, bau, dan rante beda tiap daerah. Sesuaikan dengan wilayah."
+            fields:
+              - { label: Nama satuan, name: nama, widget: string }
+              - { label: Luas (m²), name: m2, widget: number, value_type: float, min: 0 }
       - name: situs
         label: Pengaturan situs
         file: src/data/site.json

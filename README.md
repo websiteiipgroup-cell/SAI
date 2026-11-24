@@ -30,6 +30,11 @@ Halaman yang dibuat otomatis dari data produk:
 - `/kabar/`: dua area. (1) Instagram: postingan yang linknya ditempel di Pengaturan → Postingan Instagram, tampil sebagai
   embed resmi Instagram (maksimal 9). Kalau daftarnya kosong, tampil tombol Ikuti @sagri_id. (2) Artikel: semua artikel, terbaru di atas.
 - `/cerita-sagri/` dan `/pengetahuan/`: daftar artikel per kategori.
+- `/hitung-dosis/`: kalkulator dosis lapangan. Mengubah anjuran dosis produk menjadi takaran per tangki sesuai luas
+  lahan, alat semprot, kebiasaan semprot petani, dan takaran (tutup botol, sendok, gelas ukur, timbangan). Data produk,
+  alat semprot, dan satuan luas daerah (bata, rante, patok, bau) diatur di admin → Pengaturan → Kalkulator dosis.
+  Produk hanya muncul kalau dosisnya diisi di situ, dan halaman produknya otomatis mendapat tombol "Hitung dosis".
+  Link `/hitung-dosis/?produk=<alamat-produk>` langsung membuka kalkulator untuk produk itu.
 
 Album foto artikel: di form artikel, isi "Album foto (geser kiri-kanan)" dengan 2 foto atau lebih. Album tampil di atas
 artikel menggantikan foto sampul; di HP digeser dengan jari, di komputer pakai tombol panah. Foto sampul tetap dipakai di
@@ -107,4 +112,7 @@ artikel (`/2023/01/06/product-training-tim-sulawesi/` → `/artikel/product-trai
 - Foto kemasan produk lama (2023) resolusinya kecil (500 px). Ganti dengan foto kemasan baru minimal 900 × 900.
 - Facebook dan YouTube di situs lama ada dua alamat berbeda. Yang dipakai: facebook.com/ptsatyaagroindonesia dan youtube.com/@sagri_id.
 - Artikel lama dipindahkan apa adanya; typo di isi artikel belum dibetulkan. Foto di dalam artikel lama sudah dipindah ke album.
+- Dosis di kalkulator diambil dari teks cara pakai di website (per liter air). Sagri Panca dan Sagri Storm ditulis per
+  tangki tanpa ukuran tangki, dan Sagri Fix angkanya tidak konsisten (0,15–1,25 ml/L vs 2–5 ml per tangki), jadi
+  ketiganya belum dimasukkan. Isi kemasan, ukuran tutup botol, dan air standar per produk juga belum diisi; minta ke R&D.
 - Tempel 3, 6, atau 9 link postingan Instagram terbaru di Pengaturan supaya area Instagram di halaman Kabar terisi.

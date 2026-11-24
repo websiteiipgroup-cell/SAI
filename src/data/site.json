@@ -23,6 +23,10 @@
       "link": "/produk/"
     },
     {
+      "label": "Hitung Dosis",
+      "link": "/hitung-dosis/"
+    },
+    {
       "label": "Kabar",
       "link": "/kabar/"
     },

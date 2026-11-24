@@ -5,6 +5,7 @@ import Foto from '../../components/Foto.astro';
 import Grup from '../../components/Grup.astro';
 import ProdukCard from '../../components/ProdukCard.astro';
 import site from '../../data/site.json';
+import kalk from '../../data/kalkulator.json';
 import { slugify, wa, komoditasByNama } from '../../lib/md';
 
 export async function getStaticPaths() {
@@ -21,6 +22,7 @@ const terkait = semua
   .sort((a, b) => (a.data.jenis === d.jenis ? 0 : 1) - (b.data.jenis === d.jenis ? 0 : 1) || a.data.urutan - b.data.urutan)
   .slice(0, 4);
 const label = d.jenis === 'Fungisida' ? 'Penyakit sasaran' : d.jenis === 'Herbisida' ? 'Gulma sasaran' : 'Hama sasaran';
+const adaDosis = kalk.produk.some((x) => x.produk === p.id && +x.min > 0);
 const jenisPendek = d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis;
 ---
 <Base title={d.nama} description={d.ringkasan || `${d.nama}, ${d.sifat.toLowerCase()} dari SAGRI.`} image={d.gambar || undefined}>
@@ -47,7 +49,9 @@ const jenisPendek = d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis;
         </dl>
         <div class="aksi">
           <a class="btn btn--wa" href={wa(`Halo SAGRI, saya ingin tanya tentang ${d.nama}.`)}>Tanya {d.nama.replace(/ \d.*$/, '')} via WhatsApp</a>
-          {d.cara_pakai.length > 0 && <a class="btn btn--garis" href="#cara-pakai">Lihat cara pakai</a>}
+          {adaDosis
+            ? <a class="btn btn--garis" href={`/hitung-dosis/?produk=${p.id}`}>Hitung dosis untuk lahan Anda</a>
+            : d.cara_pakai.length > 0 && <a class="btn btn--garis" href="#cara-pakai">Lihat cara pakai</a>}
         </div>
       </div>
     </div>
@@ -100,6 +104,7 @@ const jenisPendek = d.jenis === 'Zat pengatur tumbuh' ? 'ZPT' : d.jenis;
         <ol class="cara__list">{d.cara_pakai.map((c) => <li>{c}</li>)}</ol>
         <p class="cara__catatan">Baca dan ikuti petunjuk pada label kemasan. Gunakan alat pelindung diri saat mencampur dan menyemprot.
           <a href="/artikel/gunakan-apd-kurangi-risiko-keracunan-pestisida/">Panduan APD</a></p>
+        {adaDosis && <p class="cara__hitung"><a class="btn btn--daun" href={`/hitung-dosis/?produk=${p.id}`}>Hitung takaran per tangki</a></p>}
       </div>
     </div></section>
   )}

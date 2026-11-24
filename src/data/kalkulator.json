@@ -1,0 +1,180 @@
+{
+  "judul": "Hitung dosis",
+  "pengantar": "Ubah anjuran dosis produk SAGRI menjadi takaran per tangki, sesuai luas lahan, alat semprot, dan takaran yang Anda punya.",
+  "catatan": "Hasil hitungan adalah panduan. Selalu baca dan ikuti petunjuk pada label kemasan, dan tanyakan petugas SAGRI bila ragu.",
+  "air_standar": 400,
+  "produk": [
+    {
+      "produk": "sagri-beat-7-30-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 0.5,
+      "max": 0.75,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-meth-77-sp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 0.75,
+      "max": 1.5,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-bezz-30-ec",
+      "bentuk": "cair",
+      "mode": "konsen",
+      "min": 0.75,
+      "max": 1.5,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-clear-30-30-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 0.5,
+      "max": 0.75,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-clean-150-350-sc",
+      "bentuk": "cair",
+      "mode": "konsen",
+      "min": 0.5,
+      "max": 1,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-top-35-20-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 0.5,
+      "max": 0.75,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-bat-70-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 0.75,
+      "max": 1.5,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-guard-8-54-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 0.75,
+      "max": 1.5,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-zone-450-sc",
+      "bentuk": "cair",
+      "mode": "konsen",
+      "min": 0.75,
+      "max": 1.5,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-manzim-65-20-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 0.75,
+      "max": 1.5,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-zeb-85-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 1,
+      "max": 2,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    },
+    {
+      "produk": "sagri-nil-77-wp",
+      "bentuk": "bubuk",
+      "mode": "konsen",
+      "min": 1,
+      "max": 2,
+      "air_standar": 0,
+      "kemasan": 0,
+      "tutup": 0
+    }
+  ],
+  "alat": [
+    {
+      "nama": "Tangki 16 L (aki)",
+      "tangki": 16,
+      "vol": 300
+    },
+    {
+      "nama": "Tangki 20 L (mesin 2 tak)",
+      "tangki": 20,
+      "vol": 500
+    },
+    {
+      "nama": "Tangki 16 L (manual)",
+      "tangki": 16,
+      "vol": 0
+    },
+    {
+      "nama": "Drum 200 L",
+      "tangki": 200,
+      "vol": 0
+    }
+  ],
+  "satuan": [
+    {
+      "nama": "m²",
+      "m2": 1
+    },
+    {
+      "nama": "are",
+      "m2": 100
+    },
+    {
+      "nama": "hektar",
+      "m2": 10000
+    },
+    {
+      "nama": "bata / tumbak",
+      "m2": 14
+    },
+    {
+      "nama": "rante",
+      "m2": 400
+    },
+    {
+      "nama": "patok",
+      "m2": 400
+    },
+    {
+      "nama": "bau",
+      "m2": 7096
+    }
+  ]
+}
